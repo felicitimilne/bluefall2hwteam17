@@ -2,6 +2,6 @@
 
 # libraries
 
-df <- read.csv("https://raw.githubusercontent.com/felicitimilne/bluefall2hwteam17/main/hrl_load_metered.csv?token=GHSAT0AAAAAABZLPKSLSFXGB4Z2N6IJDRJOYZVUJXA")
+df <- read.csv("https://raw.githubusercontent.com/felicitimilne/bluefall2hwteam17/main/hrl_load_metered.csv")
 
 summary(df)
