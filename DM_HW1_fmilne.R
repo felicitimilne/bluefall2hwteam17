@@ -42,10 +42,10 @@ df$type <- rep(c('meat', 'wine', 'side'), times= (nrow(df)/3))
 wideorder <- df %>%
   pivot_wider(names_from = type, values_from = item)
 
-wideorder <- mutate(wideorder, personOrder = paste(meat, wine, side)) 
+wideorder <- wideorder %>% 
+  unite(personOrder, meat:side, sep=",")
 
-trans.data <- wideorder %>% 
-  dplyr::select('OrderSeat', 'personOrder')
+trans.data <- as(split(wideorder$personOrder, wideorder$OrderSeat), "transactions")
 
 #association analysis
 inspect(trans.data) #keep getting error with inspect
