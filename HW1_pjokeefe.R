@@ -43,10 +43,19 @@ meat <- order %>%
 
 meat <- meat[,c('item', 'OrderSeat')]
 
-meattemp <- as(split(meat$item, meat$OrderSeat), "transactions")
+graph <- meat %>%
+  group_by(item) %>%
+  count() %>%
+  head(5)
 
-itemFrequencyPlot(meattemp, topN=5, type = "absolute", xlab = "Top 5 Most Frequently Purchased Items"
-                  , ylab = "Count of Meats Sold")
+  
+ggplot(graph, aes(x=reorder(item, -n), y = n)) +
+  geom_bar(stat = 'identity', fill = "brown2") +
+  xlab("Main Entree Name") +
+  ylab("Count of Meats Sold") + 
+  ggtitle("Top 5 Most Frequently Purchased Meats") +
+  theme(plot.title = element_text(hjust = 0.5))
+
 
 #Filter to wines only
 wine <- order %>%
@@ -54,10 +63,18 @@ wine <- order %>%
 
 wine <- wine[,c('item', 'OrderSeat')]
 
-winetemp <- as(split(wine$item, wine$OrderSeat), "transactions")
+graph1 <- wine %>%
+  group_by(item) %>%
+  count() %>%
+  head(5)
 
-itemFrequencyPlot(winetemp, topN=5, type = "absolute", xlab = "Top 5 Most Frequently Purchased Items"
-                  , ylab = "Count of Wines Sold")
+
+ggplot(graph1, aes(x=reorder(item, -n), y = n)) +
+  geom_bar(stat = 'identity', fill = "darkorchid2") +
+  xlab("Wine Name") +
+  ylab("Count of Wines Sold") + 
+  ggtitle("Top 5 Most Frequently Purchased Wines") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 #Filter to sides only
 side <- order %>%
@@ -65,10 +82,18 @@ side <- order %>%
 
 side <- side[,c('item', 'OrderSeat')]
 
-sidetemp <- as(split(side$item, side$OrderSeat), "transactions")
+graph2 <- side %>%
+  group_by(item) %>%
+  count() %>%
+  head(5)
 
-itemFrequencyPlot(sidetemp, topN=5, type = "absolute", xlab = "Top 5 Most Frequently Purchased Items"
-                  , ylab = "Count of Sides Sold")
+
+ggplot(graph2, aes(x=reorder(item, -n), y = n)) +
+  geom_bar(stat = 'identity', fill = "darkolivegreen4") +
+  xlab("Side Name") +
+  ylab("Count of Sides Sold") + 
+  ggtitle("Top 5 Most Frequently Purchased Sides") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 #Item transactions of all items
 temp <- as(split(order$item, order$OrderSeat), "transactions")
