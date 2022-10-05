@@ -7,7 +7,7 @@ Created on Fri Sep 30 05:50:43 2022
 """
 
 from lyricsgenius import Genius
-import json
+#import json
 import urllib
 from bs4 import BeautifulSoup as bs
 from nrclex import NRCLex
