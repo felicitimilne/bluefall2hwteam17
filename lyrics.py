@@ -50,11 +50,12 @@ for j in range(2006, 2022):
 accumulated_sent_dict = {}
 lyric_dict = {}
 
-for i in range(200, 300):
+for i in range(708, 800):
     artist_string = song_list[i][1]
     if artist_string == "The Black Eyed Peas": #any(x in artist_string.lower() for x in [" featuring ", " or ", " duet with ", " with ", " feat. ", " x ", " & ", ", ", " / "]):
         artist_string = artist_string[4:]
-        
+    elif artist_string == "Lady Antebellum":
+        artist_string = artist_string[0:6]
     if " featuring " in artist_string.lower():
         artist_string = artist_string[0:artist_string.lower().index(" featuring ")]
     elif " x " in artist_string.lower():
