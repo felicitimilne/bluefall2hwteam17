@@ -60,18 +60,35 @@ ggplot(data = wideorder, aes(x = reorder(side, side, function(x) - length(x)))) 
   labs(x = "Item", y = "Frequency", title = "Descending Order of Side Frequency")
 
 trans.order <- as(split(order$item, order$OrderSeat), "transactions")
-order.rules <- trans.order %>% apriori(parameter = list(supp = 0.01, conf = 0.25, target = "rules")) %>% sort(by = "confidence", decreasing = TRUE)
-order.rules.df <- as.data.frame(inspect(order.rules))
-order.rules.df <- order.rules.df %>% dplyr::select(lhs, rhs, support, confidence, coverage, lift, count) %>%
-  filter(lhs != "{}") %>% arrange(by = desc(confidence))
+# order.rules <- trans.order %>% apriori(parameter = list(supp = 0.01, conf = 0.25, target = "rules")) %>% sort(by = "confidence", decreasing = TRUE)
+# order.rules.df <- as.data.frame(inspect(order.rules))
+# order.rules.df <- order.rules.df %>% dplyr::select(lhs, rhs, support, confidence, coverage, lift, count) %>%
+#   filter(lhs != "{}") %>% arrange(by = desc(confidence))
 
-plot(order.rules)
-ggplot(data = order.rules.df)
-plot(head(order.rules, n = 10), method = "graph", engine = "htmlwidget")
+# plot(order.rules)
+# ggplot(data = order.rules.df)
+# plot(head(order.rules, n = 10), method = "graph", engine = "htmlwidget")
 
-order.rules.fm <- trans.order %>% apriori(parameter = list(supp = 0.01, conf = 0.25, target = "rules"), appearance = list(default = "lhs", rhs = "Filet Mignon")) %>% sort(by = "confidence", decreasing = TRUE)
-plot(order.rules.fm)
+order.rules.meat <- trans.order %>% apriori(parameter = list(supp = 0.008, conf = 0.15, target = "rules"), appearance = list(default = "rhs", lhs = unique(wideorder$meat))) %>% sort(by = "lift", decreasing = TRUE)
+order.rules.meat.df <- as.data.frame(inspect(order.rules.meat)) 
+list = str_replace(str_replace(order.rules.meat.df$rhs, "\\{", ""), "\\}", "")
+index = c()
+for (i in 1:length(list)) { 
+  if (list[i] %in% unique(wideorder$wine)) {
+    index = append(index, i)
+  }
+}
+order.rules.meat.df <- order.rules.meat.df[index,]
 
-order.rules.bs <- trans.order %>% apriori(parameter = list(supp = 0.01, conf = 0.25, target = "rules"), appearance = list(default = "lhs", rhs = "Blackstone Merlot")) %>% sort(by = "confidence", decreasing = TRUE)
-bs_plot <- plot(order.rules.bs)
+unique.meats.df.lift <- order.rules.meat.df[match(unique(order.rules.meat.df$lhs), order.rules.meat.df$lhs),]
+unique.meats.df.lift <- unique.meats.df.lift[1:length(unique(wideorder$meat)),]
+
+plot(order.rules.meat.df)
+plot(unique.meats.df)
+plot(unique.meats.df.lift)
+
+# plot(order.rules.fm)
+# 
+# order.rules.bs <- trans.order %>% apriori(parameter = list(supp = 0.01, conf = 0.25, target = "rules"), appearance = list(default = "lhs", rhs = "Blackstone Merlot")) %>% sort(by = "confidence", decreasing = TRUE)
+# bs_plot <- plot(order.rules.bs)
 
