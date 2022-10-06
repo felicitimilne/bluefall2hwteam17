@@ -50,7 +50,7 @@ for j in range(2006, 2022):
 accumulated_sent_dict = {}
 lyric_dict = {}
 
-for i in range(708, 800):
+for i in range(len(song_list)):
     artist_string = song_list[i][1]
     if artist_string == "The Black Eyed Peas": #any(x in artist_string.lower() for x in [" featuring ", " or ", " duet with ", " with ", " feat. ", " x ", " & ", ", ", " / "]):
         artist_string = artist_string[4:]
@@ -58,7 +58,7 @@ for i in range(708, 800):
         artist_string = artist_string[0:6]
     if " featuring " in artist_string.lower():
         artist_string = artist_string[0:artist_string.lower().index(" featuring ")]
-    elif " x " in artist_string.lower():
+    elif " x " in artist_string.lower() and " x & " not in artist_string.lower():
         artist_string = artist_string[0:artist_string.lower().index(" x ")]
     elif " or " in artist_string.lower():
         artist_string = artist_string[0:artist_string.lower().index(" or ")]
@@ -81,9 +81,7 @@ for i in range(708, 800):
     print(lyrics_str[0:100])
     lyric_dict[song_list[i][0], song_list[i][1]] = lyrics_str
     
-    lyric_temp_list = lyric_dict.values()
-    lyric_df = pd.DataFrame(list(zip(list(lyric_dict.keys()), list(lyric_dict.values()), list(length_dict.values()))), columns =['Song & Artist', 'Lyrics', 'Word Count'])
-    lyric_df.to_csv("~/Downloads/lyrics_with_wc2.csv")
+    #lyric_temp_list = lyric_dict.values()
     
     length_dict = {}
     wc_list = []
@@ -130,6 +128,9 @@ for i in range(708, 800):
         
         #
         print(lyric_list_final)
+        
+    lyric_df = pd.DataFrame(list(zip(list(lyric_dict.keys()), list(lyric_dict.values()), list(length_dict.values()))), columns =['Song & Artist', 'Lyrics', 'Word Count'])
+    lyric_df.to_csv("~/Downloads/lyrics_with_wc2.csv")
     
     sent_dict = {}
     avg_sentiment = 0
