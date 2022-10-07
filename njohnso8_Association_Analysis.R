@@ -50,32 +50,34 @@ side_list <- unique(wideorder$side)
 
 #Plotting frequencies of individual items
 
-ggplot(data = wideorder, aes(x = reorder(meat, meat, function(x) - length(x)))) + geom_bar() + 
-  theme(axis.text.x=element_text(angle = -60, hjust = 0), plot.title = element_text(hjust = 0.5)) +
-  labs(x = "Item", y = "Frequency", title = "Descending Order of Meat Frequency")
+ggplot(data = wideorder, aes(x = reorder(meat, meat, function(x) - length(x)))) + geom_bar(fill = "#ffb000") + 
+  geom_text(aes(label = ..count.., vjust = 1.5), stat = "count", size = 5.25) + theme(axis.title=element_text(size = 22), axis.text.x=element_text(angle = -60, hjust = 0, size = 20), plot.title = element_text(hjust = 0.5, size = 25)) +
+  labs(x = "Item", y = "Frequency", title = "Descending Order of Entree Frequency")
 
-ggplot(data = wideorder, aes(x = reorder(wine, wine, function(x) - length(x)))) + geom_bar() + 
-  theme(axis.text.x=element_text(angle = -70, hjust = 0), plot.title = element_text(hjust = 0.5)) +
+ggplot(data = wideorder, aes(x = reorder(wine, wine, function(x) - length(x)))) + geom_bar(fill = "violetred4") + 
+  geom_text(aes(label = ..count.., vjust = 1.5), stat = "count", size = 4.25, color = "gray88") + theme(axis.title=element_text(size = 22), axis.text.x=element_text(angle = -70, hjust = 0, size = 15), plot.title = element_text(hjust = 0.5, size = 25)) +
   labs(x = "Item", y = "Frequency", title = "Descending Order of Wine Frequency")
 
-ggplot(data = wideorder, aes(x = reorder(side, side, function(x) - length(x)))) + geom_bar() + 
-  theme(axis.text.x=element_text(angle = -60, hjust = 0), plot.title = element_text(hjust = 0.5)) +
+ggplot(data = wideorder, aes(x = reorder(side, side, function(x) - length(x)))) + geom_bar(fill = "#648fff") + 
+  geom_text(aes(label = ..count.., vjust = 1.5), stat = "count", size = 5.25) + theme(axis.title=element_text(size = 22), axis.text.x=element_text(angle = -60, hjust = 0, size = 20), plot.title = element_text(hjust = 0.5, size = 25)) +
   labs(x = "Item", y = "Frequency", title = "Descending Order of Side Frequency")
 
 #Making the data transactional for apriori analysis
 trans.order <- as(split(order$item, order$OrderSeat), "transactions")
 
-order.rules <- trans.order %>% apriori(parameter = list(supp = 0.008, conf = 0.15, target = "rules")) %>% sort(by = "confidence", decreasing = TRUE)
+order.rules <- trans.order %>% apriori(parameter = list(supp = 0.008, conf = 0.15, target = "rules")) %>% sort(by = "lift", decreasing = TRUE)
 order.rules.df <- data.frame(
   lhs = labels(lhs(order.rules)),
   rhs = labels(rhs(order.rules)), 
   order.rules@quality)
 order.rules.df <- order.rules.df %>% dplyr::select(lhs, rhs, support, confidence, coverage, lift, count) %>%
-   filter(lhs != "{}") %>% arrange(by = desc(confidence))
+   filter(lhs != "{}")
+
+
 
 # plot(order.rules)
 # ggplot(data = order.rules.df)
-# plot(head(order.rules, n = 10), method = "graph", engine = "htmlwidget")
+plot(head(order.rules, n = 14), method = "graph", engine = "htmlwidget")
 
 #Ensuring meat is on LHS and wine is on RHS, 0.008 determined through experimentation
 #Two df's: one ordered by confidence, the other by lift
