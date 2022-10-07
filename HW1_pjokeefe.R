@@ -43,9 +43,14 @@ meat <- order %>%
 
 meat <- meat[,c('item', 'OrderSeat')]
 
+meat %>%
+  group_by(item) %>%
+  count()
+
 graph <- meat %>%
   group_by(item) %>%
   count() %>%
+  arrange(desc(n)) %>%
   head(5)
 
   
@@ -54,7 +59,7 @@ ggplot(graph, aes(x=reorder(item, -n), y = n)) +
   xlab("Main Entree Name") +
   ylab("Count of Meats Sold") + 
   ggtitle("Top 5 Most Frequently Purchased Meats") +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(axis.text.x=element_text(angle = -60, hjust = 0),plot.title = element_text(hjust = 0.5))
 
 
 #Filter to wines only
@@ -63,9 +68,14 @@ wine <- order %>%
 
 wine <- wine[,c('item', 'OrderSeat')]
 
+wine %>%
+  group_by(item) %>%
+  count()
+
 graph1 <- wine %>%
   group_by(item) %>%
   count() %>%
+  arrange(desc(n)) %>%
   head(5)
 
 
@@ -74,13 +84,18 @@ ggplot(graph1, aes(x=reorder(item, -n), y = n)) +
   xlab("Wine Name") +
   ylab("Count of Wines Sold") + 
   ggtitle("Top 5 Most Frequently Purchased Wines") +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(axis.text.x=element_text(angle = -60, hjust = 0),plot.title = element_text(hjust = 0.5))
 
 #Filter to sides only
 side <- order %>%
   filter(type == 'side')
 
 side <- side[,c('item', 'OrderSeat')]
+
+side %>%
+  group_by(item) %>%
+  arrange(desc(n)) %>%
+  count()
 
 graph2 <- side %>%
   group_by(item) %>%
@@ -93,7 +108,7 @@ ggplot(graph2, aes(x=reorder(item, -n), y = n)) +
   xlab("Side Name") +
   ylab("Count of Sides Sold") + 
   ggtitle("Top 5 Most Frequently Purchased Sides") +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(axis.text.x=element_text(angle = -60, hjust = 0),plot.title = element_text(hjust = 0.5))
 
 #Item transactions of all items
 temp <- as(split(order$item, order$OrderSeat), "transactions")
