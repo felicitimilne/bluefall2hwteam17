@@ -65,10 +65,13 @@ ggplot(data = wideorder, aes(x = reorder(side, side, function(x) - length(x)))) 
 #Making the data transactional for apriori analysis
 trans.order <- as(split(order$item, order$OrderSeat), "transactions")
 
-# order.rules <- trans.order %>% apriori(parameter = list(supp = 0.01, conf = 0.25, target = "rules")) %>% sort(by = "confidence", decreasing = TRUE)
-# order.rules.df <- as.data.frame(inspect(order.rules))
-# order.rules.df <- order.rules.df %>% dplyr::select(lhs, rhs, support, confidence, coverage, lift, count) %>%
-#   filter(lhs != "{}") %>% arrange(by = desc(confidence))
+order.rules <- trans.order %>% apriori(parameter = list(supp = 0.008, conf = 0.15, target = "rules")) %>% sort(by = "confidence", decreasing = TRUE)
+order.rules.df <- data.frame(
+  lhs = labels(lhs(order.rules)),
+  rhs = labels(rhs(order.rules)), 
+  order.rules@quality)
+order.rules.df <- order.rules.df %>% dplyr::select(lhs, rhs, support, confidence, coverage, lift, count) %>%
+   filter(lhs != "{}") %>% arrange(by = desc(confidence))
 
 # plot(order.rules)
 # ggplot(data = order.rules.df)
@@ -78,8 +81,14 @@ trans.order <- as(split(order$item, order$OrderSeat), "transactions")
 #Two df's: one ordered by confidence, the other by lift
 order.rules.meat <- trans.order %>% apriori(parameter = list(supp = 0.008, conf = 0.15, target = "rules"), appearance = list(default = "rhs", lhs = unique(wideorder$meat))) %>% sort(by = "confidence", decreasing = TRUE)
 order.rules.meat.lift <- trans.order %>% apriori(parameter = list(supp = 0.008, conf = 0.15, target = "rules"), appearance = list(default = "rhs", lhs = unique(wideorder$meat))) %>% sort(by = "lift", decreasing = TRUE)
-order.rules.meat.df <- as.data.frame(inspect(order.rules.meat)) 
-order.rules.meat.df.lift <- as.data.frame(inspect(order.rules.meat.lift)) 
+order.rules.meat.df <- data.frame(
+  lhs = labels(lhs(order.rules.meat)),
+  rhs = labels(rhs(order.rules.meat)), 
+  order.rules.meat@quality)
+order.rules.meat.df.lift <- data.frame(
+  lhs = labels(lhs(order.rules.meat.lift)),
+  rhs = labels(rhs(order.rules.meat.lift)), 
+  order.rules.meat.lift@quality)
 
 #Lose brackets, check if RHS is a wine and grab indices
 list = str_replace(str_replace(order.rules.meat.df$rhs, "\\{", ""), "\\}", "")
