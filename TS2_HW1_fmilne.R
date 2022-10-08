@@ -26,12 +26,12 @@ colnames(rolled_df)[colnames(rolled_df) == "fn3"] = "mw_max"
 MegaWatt_mean <- ts(data = rolled_df$mw_mean, start = c(2019, 8), frequency = 12)
 
 autoplot(MegaWatt_mean) +
-  labs(title="Time Series plot for Enegry Usage", x = "Date", y="Megawatts") +
-
-#get current labels
-old_x <- load("https://raw.githubusercontent.com/felicitimilne/bluefall2hwteam17/main/old_x.Rda")
-
-
-
+  labs(title="Time Series plot for Enegry Usage", x = "Date", y="Megawatts") 
+#to correct axis labels later if I can figure it out
 #scale_x_continuous(breaks = c(2020, 2040, 2060, 2080, 2100, 2120), 
-                     #labels = c("-5000", "-2500", "TSS", "2500", "5000"))
+#labels = c("-5000", "-2500", "TSS", "2500", "5000"))
+
+#get current labels to correct plot axis (insert tricky stuff here)
+ggbld <- ggplot_build(autoplot(MegaWatt_mean))
+
+
