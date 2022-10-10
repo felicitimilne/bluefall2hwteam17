@@ -1,0 +1,147 @@
+---
+title: "TS2_HW1"
+author: "Jiwon Lee"
+date: "2022-10-10"
+output: html_document
+---
+
+# Time Series II Homework
+
+```{r}
+#download libraries
+
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+install.packages("prophet")
+library(prophet)
+```
+
+
+## Import Data
+
+```{r}
+# original data
+hrl_load_metered <- read.csv("~/code/R/Time Series II/TS2_HW1_data/hrl_load_metered.csv")
+
+# dropping unnecessary variables
+data <- hrl_load_metered[,c(1,6)]
+
+###### data is hourly from 8/1/19 0:00 to 9/22/22 23:00
+
+# loading test data
+
+test1 <- read.csv("~/code/R/Time Series II/TS2_HW1_data/hrl_load_metered - test1.csv")
+
+val <- test1 ###### test1 is from 9/23/22 to 9/29/22 --> setting this to validation (1 week)
+
+test2 <- read.csv("~/code/R/Time Series II/TS2_HW1_data/hrl_load_metered - test2.csv")
+
+###### test2 is from 9/30/22 to 10/6/22 (1 week)
+```
+
+## Creating Time Series Object
+
+```{r}
+# create time series object
+energy <- ts(data[,2], start = 2019, frequency = 8766) # frequency = 24 hours * 365.25 days in a year
+
+# autoplot
+autoplot(energy) +
+  ggtitle("Energy Usage") +
+  xlab("Time") +
+  ylab("Energy")
+
+
+####### Questions
+# 1) how to change the time on the x label to display correctly? 
+# 2) how to account for two 0's (obs 14187, 5283)
+
+####### Observations
+#series has an annual seasonality - big increase in the summer, slight increase in the winter
+#no trend observed
+
+```
+
+## Decomposition
+
+```{r}
+#STL decomposition
+
+decomp_stl <- stl(energy, s.window = 7)
+plot(decomp_stl)
+autoplot(decomp_stl)
+
+####### Comments
+#seasonal pattern accounts for most of the variability. Slight upward trend but considering the length of the bar, it does not account for much variability in the data.
+```
+
+## Model Building
+
+### Holt Winters 
+```{r}
+HW <- hw(energy, seasonal = "additive", h = 168)
+
+####### running into error : frequency too high
+
+```
+
+### Unit Root Test for Seasonal Difference
+
+```{r}
+# seasonal unit-root testing
+energy %>% nsdiffs()
+
+###### 0 --> deterministic solutions
+```
+
+### Deterministic Solutions
+
+#### Fourier Transforms
+
+```{r}
+plots <- list()
+for (i in seq(6)) {
+  fit <- auto.arima(energy, xreg = fourier(energy, K = i),
+                    seasonal = FALSE, lambda = NULL)
+  plots [[i]] <- autoplot(forecast::forecast(fit,
+                                             xreg = fourier(energy, K=i, h=168))) + 
+    xlab(paste("K=",i, "     BIC=", round(fit[["bic"]],2))) +
+    ylab("") + ylim(400, 2500)
+}
+
+gridExtra::grid.arrange(
+  plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]],nrow = 3
+)
+```
+
+
+#### Predictor Variables for Seasonality
+
+This approach might be best for our data since the yearly seasonality revolves around the seasons. 
+We can have one variable for summer and one for winter.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
