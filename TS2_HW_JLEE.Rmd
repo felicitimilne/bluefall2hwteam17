@@ -22,7 +22,7 @@ library(ggplot2)
 library(seasonalview)
 library(aTSA)
 library(imputeTS)
-install.packages("prophet")
+#install.packages("prophet")
 library(prophet)
 ```
 
