@@ -1,0 +1,232 @@
+---
+title: "TS2_HW1"
+author: "Jiwon Lee"
+date: "2022-10-10"
+output: html_document
+---
+
+# Time Series II Homework
+
+```{r}
+#download libraries
+
+library(tseries)
+library(forecast)
+library(haven)
+library(fma)
+library(expsmooth)
+library(lmtest)
+library(zoo)
+library(seasonal)
+library(ggplot2)
+library(seasonalview)
+library(aTSA)
+library(imputeTS)
+#install.packages("prophet")
+library(prophet)
+```
+
+
+## Import Data
+
+```{r}
+# original data
+hrl_load_metered <- read.csv("~/Downloads/Homework1_TS2/hrl_load_metered.csv")
+
+# dropping unnecessary variables
+data <- hrl_load_metered[,c(1,6)]
+
+for (i in 1:nrow(data)) {
+  if (data$mw[i] == 0) {
+    data$mw[i] = (data$mw[i + 1] + data$mw[i - 1]) / 2
+  }
+}
+
+ru_data <- data.frame()
+for (i in 1:(nrow(data)/6)) {
+  ru_mw <- (1/6) * (data$mw[6 * i - 5] + data$mw[6 * i - 4] + data$mw[6 * i - 3] + data$mw[6 * i - 2] + data$mw[6 * i - 1] + data$mw[6 * i])
+  ru_data = rbind(ru_data, c(data$datetime_beginning_ept[4 * i - 3], ru_mw))
+}
+colnames(ru_data) <- c("Period", "mw")
+
+###### data is hourly from 8/1/19 0:00 to 9/22/22 23:00
+
+# loading test data
+
+test1 <- read.csv("~/Downloads/hrl_load_metered - test1.csv")
+
+val <- test1 ###### test1 is from 9/23/22 to 9/29/22 --> setting this to validation (1 week)
+
+test2 <- read.csv("~/Downloads/hrl_load_metered - test2.csv")
+
+###### test2 is from 9/30/22 to 10/6/22 (1 week)
+```
+
+## Creating Time Series Object
+
+```{r}
+# create time series object
+energy <- ts(data[,2], start = 2019 + 212/365, frequency = 8766) # frequency = 24 hours * 365.25 days in a year
+energy_ru <- ts(ru_data[,2], start = 2019 + 212/365, frequency = 1532)
+energy_model <- ts(data[,2], start = 2019 + 212/365, frequency = 24)
+# autoplot
+energy_plot <- autoplot(energy) +
+  ggtitle("Hourly Energy Usage from 8/1/19 to 9/22/22") +
+  xlab("Time") +
+  ylab("Energy (megawatts)")
+
+tseq <- seq.POSIXt(from = as.POSIXct("2019-08-01 00:00:00"), length.out = nrow(data), by = "hours")
+# date_vec <- lubridate::seq(from = as.POSIXct("08-01-2019 00:00:00", format = "%m-%d-%Y %h:%m:%s"), to = as.POSIXct("09-22-2022 23:00:00", format = "%m-%d-%y %h:%m:%s"), by = "4 hr")
+
+energy_stl <- stl(energy, s.window = 24)
+trend <- ggplot(data = data, aes(x = tseq, y = energy_stl$time.series[,"trend"])) + 
+  geom_line() + labs(x = "Time", y = "Energy (megawatts)", title = "Trend of Hourly Energy Usage") + 
+  theme(plot.title = element_text(hjust = 0.5))
+trend
+
+season <- ggplot(data = data, aes(x = tseq, y = energy_stl$time.series[,"seasonal"])) + 
+  geom_line() + labs(x = "Time", y = "Energy (megawatts)", title = "Seasonality of Hourly Energy Usage") + 
+  theme(plot.title = element_text(hjust = 0.5))
+season
+
+error <- ggplot(data = data, aes(x = tseq, y = energy_stl$time.series[,"remainder"])) + 
+  geom_line() + labs(x = "Time", y = "Energy (megawatts)", title = "Error of Hourly Energy Usage") + 
+  theme(plot.title = element_text(hjust = 0.5))
+error
+
+grid.arrange(energy_plot, grid.arrange(trend, season, error, ncol = 1), ncol = 2)
+
+autoplot(energy_ru) +
+  ggtitle("Energy Usage") +
+  xlab("Time") +
+  ylab("Energy")
+
+####### Questions
+# 1) how to change the time on the x label to display correctly? 
+# 2) how to account for two 0's (obs 14187, 5283)
+
+####### Observations
+#series has an annual seasonality - big increase in the summer, slight increase in the winter
+#no trend observed
+
+```
+
+## Decomposition
+
+```{r}
+#STL decomposition
+
+# decomp_stl <- stl(energy, s.window = 7)
+# plot(decomp_stl)
+# autoplot(decomp_stl)
+
+####### Comments
+#seasonal pattern accounts for most of the variability. Slight upward trend but considering the length of the bar, it does not account for much variability in the data.
+```
+
+## Model Building
+
+### Holt Winters 
+```{r}
+HW_add <- hw(energy_model, seasonal = "additive", h = 168)
+HW_mult <- hw(energy_model, seasonal = "multiplicative", h = 168)
+
+#whole dataset
+tseq_with_forecast <- c(tseq, seq.POSIXt(from = as.POSIXct("2022-09-23 00:00:00", tz = "EST"), length.out = 168, by = "hours"))
+#only 2022
+begin_2022 <- match("1/1/22 0:00", data$datetime_beginning_ept)
+tseq_2022 <- seq.POSIXt(from = as.POSIXct("2022-01-01 00:00:00", tz = "EST"), length.out = nrow(data) - begin_2022 + 170, by = "hours")
+tseq_2022 <- tseq_2022[c(seq(1, match(as.POSIXct("2022-03-13 01:00:00", tz = "EST"), tseq_2022)), seq(match(as.POSIXct("2022-03-13 03:00:00", tz = "EST"), tseq_2022), length(tseq_2022)))]
+#from 8/1/22, same order for each code block
+begin_aug_2022 <- match("8/1/22 0:00", data$datetime_beginning_ept)
+tseq_2022_aug <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(data) - begin_aug_2022 + 169, by = "hours")
+
+#add forecasted values for add
+whole_mw_with_forecast_add <- c(data$mw, HW_add$mean)
+mw_with_forecast_add <- c(data$mw[begin_2022:nrow(data)], HW_add$mean)
+aug_mw_with_forecast_add <- c(data$mw[begin_aug_2022:nrow(data)], HW_add$mean)
+
+#add forecasted values for mult
+whole_mw_with_forecast_mult <- c(data$mw, HW_mult$mean)
+mw_with_forecast_mult <- c(data$mw[begin_2022:nrow(data)], HW_mult$mean)
+aug_mw_with_forecast_mult <- c(data$mw[begin_aug_2022:nrow(data)], HW_mult$mean)
+
+#create dummy df for ggplot
+whole_dummy_df <- data.frame(cbind(seq(1:length(tseq_with_forecast)), c(rep(FALSE, (length(tseq))), rep(TRUE, 168))))
+dummy_df <- data.frame(cbind(seq(1:length(tseq_2022)), c(rep(FALSE, (length(tseq_2022) - 168)), rep(TRUE, 168))))
+dummy_df_aug <- data.frame(cbind(seq(1:length(tseq_2022_aug)), c(rep(FALSE, (length(tseq_2022_aug) - 168)), rep(TRUE, 168))))
+
+#add names
+colnames(whole_dummy_df) <- c("index", "forecast")
+colnames(dummy_df) <- c("index", "forecast")
+colnames(dummy_df_aug) <- c("index", "forecast")
+
+#time plots with forecast colored: add
+ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_add, color = factor(forecast), group = 1)) + scale_x_datetime(date_labels = "%Y") + geom_line() + scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + labs(x = "Time", y = "Energy (megawatts)", title = "Additive HW Forecast for 9/23/22-9/29/22", color = "Data")
+ggplot(data = dummy_df, aes(x = tseq_2022, y = mw_with_forecast_add, color = factor(forecast), group = 1)) + scale_x_datetime(date_labels = "%m/%Y") + geom_line() + scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + labs(x = "Time", y = "Energy (megawatts)", title = "Additive HW Forecast for 9/23/22-9/29/22", color = "Data")
+ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_add, color = factor(forecast), group = 1)) + scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + labs(x = "Time", y = "Energy (megawatts)", title = "Additive HW Forecast for 9/23/22-9/29/22", color = "Data")
+
+#time plots with forecast colored: mult
+ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_mult, color = factor(forecast), group = 1)) + scale_x_datetime(date_labels = "%Y") + geom_line() + scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Forecast for 9/23/22-9/29/22", color = "Data")
+ggplot(data = dummy_df, aes(x = tseq_2022, y = mw_with_forecast_mult, color = factor(forecast), group = 1)) + scale_x_datetime(date_labels = "%m/%Y") + geom_line() + scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Forecast for 9/23/22-9/29/22", color = "Data")
+ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_mult, color = factor(forecast), group = 1)) + scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Forecast for 9/23/22-9/29/22", color = "Data")
+
+add_sum = 0
+mult_sum = 0
+for (i in 1:nrow(val)) {
+  add_sum <- add_sum + (abs(val$mw[i] - HW_add$mean[i]) / val$mw[i])
+  mult_sum <- mult_sum + (abs(val$mw[i] - HW_mult$mean[i]) / val$mw[i])
+}
+add_mape = add_sum / nrow(val)
+mult_mape = mult_sum / nrow(val)
+
+#summary(HW)
+####### running into error : frequency too high
+
+```
+
+### Unit Root Test for Seasonal Difference
+
+```{r}
+# seasonal unit-root testing
+energy_model %>% nsdiffs()
+energy_model %>% diff(lag = 24) %>% ggtsdisplay()
+
+###### 0 --> deterministic solutions
+```
+
+### Stochastic Solutions
+
+#### Seasonal ARIMA
+
+```{r}
+
+first_model = 
+second_model = Arima(energy_model, order = c(2, 0, 1), seasonal = c(3, 1, 0))
+second_model %>% residuals() %>% ggtsdisplay() + labs(title = "Second Model: ARIMA(2,0,1)(3,1,0)[24]")
+auto_model = auto.arima(energy_model, seasonal = TRUE)
+auto_model %>% residuals() %>% ggtsdisplay() + labs(title = "Auto Model: ARIMA(5,0,0)(2,1,0)[24]")
+
+```
+
+
+#### Predictor Variables for Seasonality
+
+This approach might be best for our data since the yearly seasonality revolves around the seasons. 
+We can have one variable for summer and one for winter.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
