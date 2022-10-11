@@ -70,9 +70,88 @@ energy %>% diff(lag = 24) %>% ggtsdisplay()
 
 # Seasonal ARIMA with seasonal differences
 #testing AR and MA terms
-energy %>% 
-  Arima(order=c(1,0,3), seasonal=c(2,1,3)) %>%
+
+
+model1323 <- Arima(energy, order = c(1,0,3), seasonal = c(2,1,3))
+
+model1323 %>%
   residuals() %>% ggtsdisplay()
+
+#Ljung-box (check if captured white noise)
+index1=seq(1,15)
+White.LB <- rep(NA, 15)
+for(i in 1:15){
+  White.LB[i] <- Box.test(model1323$residuals, lag=i, type="Ljung-Box", fitdf = 9)$p.value
+  print(Box.test(model1323$residuals, lag=i, type="Ljung-Box", fitdf = 9)$p.value)
+}
+white.dat=data.frame(cbind(White.LB[10:15],index1[10:15]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+#plot the White Noise of model
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="White Noise of Model 1 ",x="Lags",y="p-values")+coord_cartesian(ylim = c(0,1))
+
+#plot the first model's residual's white noise
+train.plot=data.frame(energy)
+ggplot(data=train.plot,aes(x=residuals(model1323)))+
+  geom_histogram() +
+  labs(title = "Distribution of the Residuals of Model 1", x = "Residual", y = "Count of Residuals")
+
+#Check residuals of model 3
+checkresiduals(model1323)
+
+
+
+#Model 1,0,2,2,1,2
+
+model1222 <- Arima(energy, order = c(1,0,2), seasonal = c(2,1,2))
+
+model1222 %>%
+  residuals() %>% ggtsdisplay()
+
+#Ljung-box (check if captured white noise)
+index1=seq(1,13)
+White.LB <- rep(NA, 13)
+for(i in 1:13){
+  White.LB[i] <- Box.test(model1222$residuals, lag=i, type="Ljung-Box", fitdf = 7)$p.value
+  print(Box.test(model1222$residuals, lag=i, type="Ljung-Box", fitdf = 7)$p.value)
+}
+white.dat=data.frame(cbind(White.LB[8:13],index1[8:13]))
+colnames(white.dat)=c("pvalues","Lag") 
+
+#plot the White Noise of model
+ggplot(white.dat,aes(x=factor(Lag),y=pvalues))+geom_col()+labs(title="White Noise of Model 2 ",x="Lags",y="p-values")+coord_cartesian(ylim = c(0,1))
+
+#plot the first model's residual's white noise
+train.plot=data.frame(energy)
+ggplot(data=train.plot,aes(x=residuals(model1222)))+
+  geom_histogram() +
+  labs(title = "Distribution of the Residuals of Model 2", x = "Residual", y = "Count of Residuals")
+
+#Check residuals of model 2
+checkresiduals(model1222)
+
+
+#Model 2,0,2,2,1,2
+
+model2222 <- Arima(energy, order = c(2,0,2), seasonal = c(2,1,2))
+
+model2222 %>%
+  residuals() %>% ggtsdisplay()
+
+checkresiduals(model2222)
+
+
+
+#Model 2,0,3,2,1,3
+
+model2323 <- Arima(energy, order = c(2,0,3), seasonal = c(2,1,3))
+
+model2323 %>%
+  residuals() %>% ggtsdisplay()
+
+checkresiduals(model2323)
+
+
 
 #Auto arima with seasonal differences
 S.ARIMA <- auto.arima(energy, method="ML", seasonal = TRUE, D = 1, stepwise = TRUE)
