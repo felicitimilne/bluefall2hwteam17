@@ -53,12 +53,12 @@ autoplot(decomp_stl)
 ggsubseriesplot(energy)
 
 #Create the holt winter's model
-HW <- hw(energy, seasonal = "additive", h = 168)
+HW <- hw(energy, seasonal = "additive", h = 168) #forecast a week out
 summary(HW)
 
 #Plot the forecasts from the holt-winters model
 autoplot(HW)+
-  autolayer(fitted(HW),series="Fitted")+ylab("US Steel Shipments")
+  autolayer(fitted(HW),series="Fitted")+ylab("Megawatts")
 
 #nsdiffs to check for stochastic or deterministic seasonality
 energy %>% nsdiffs()
