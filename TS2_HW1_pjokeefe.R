@@ -79,8 +79,10 @@ S.ARIMA <- auto.arima(energy, method="ML", seasonal = TRUE, D = 1, stepwise = TR
 
 summary(S.ARIMA)
 
+#Check residuals of the model built by auto arima
 energy %>% 
   Arima(order=c(0,0,2), seasonal=c(0,1,2)) %>%
   residuals() %>% ggtsdisplay()
+
 ggAcf(S.ARIMA$residuals)
 ggPacf(S.ARIMA$residuals)
