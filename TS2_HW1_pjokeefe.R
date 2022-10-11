@@ -22,11 +22,19 @@ library(prophet)
 df <- read.csv("https://raw.githubusercontent.com/felicitimilne/bluefall2hwteam17/main/hrl_load_metered.csv")
 head(df)
 
+validation <- read.csv("C:/Users/cardu/OneDrive/Documents/School Work/AA 502/Time Series 2/HW 1/hrl_load_metered - test1.csv",
+                       header = TRUE)
+head(validation)
+
 #get rid of useless variables
 df <- df[,c(1,6)]
 
+validation <- validation[,c(1,6)]
+
 #Change variable to a date time object
 df$datetime_beginning_ept <- mdy_hm(df$datetime_beginning_ept, tz = Sys.timezone())
+
+validation$datetime_beginning_ept <- mdy_hm(validation$datetime_beginning_ept, tz = Sys.timezone())
 
 #Impute the average of previous and next observation to fix the zeros for DLS
 df[c(5280:5290),]
@@ -99,6 +107,20 @@ ggplot(data=train.plot,aes(x=residuals(model1323)))+
 #Check residuals of model 3
 checkresiduals(model1323)
 
+#Test against validation set
+#forecast compared to validation for auto model
+model1323forecast <- forecast::forecast(model1323, h = 168)
+
+#calculate the error for the first model
+model1323forecast.error = validation$mw - model1323forecast$mean
+
+#calculate the MAE and MAPE for the first model
+model1323forecast.MAE = mean(abs(model1323forecast.error))
+model1323forecast.MAE
+
+model1323forecast.MAPE=mean(abs(model1323forecast.error)/abs(validation$mw)) 
+model1323forecast.MAPE
+
 
 
 #Model 1,0,2,2,1,2
@@ -130,6 +152,20 @@ ggplot(data=train.plot,aes(x=residuals(model1222)))+
 #Check residuals of model 2
 checkresiduals(model1222)
 
+#Test against validation set
+#forecast compared to validation for auto model
+model1222forecast <- forecast::forecast(model1222, h = 168)
+
+#calculate the error for the first model
+model1222forecast.error = validation$mw - model1222forecast$mean
+
+#calculate the MAE and MAPE for the first model
+model1222forecast.MAE = mean(abs(model1222forecast.error))
+model1222forecast.MAE
+
+model1222forecast.MAPE=mean(abs(model1222forecast.error)/abs(validation$mw)) 
+model1222forecast.MAPE
+
 
 #Model 2,0,2,2,1,2
 
@@ -139,6 +175,20 @@ model2222 %>%
   residuals() %>% ggtsdisplay()
 
 checkresiduals(model2222)
+
+#Test against validation set
+#forecast compared to validation for auto model
+model2222forecast <- forecast::forecast(model2222, h = 168)
+
+#calculate the error for the first modell
+model2222forecast.error = validation$mw - model2222forecast$mean
+
+#calculate the MAE and MAPE for the first modell
+model2222forecast.MAE = mean(abs(model2222forecast.error))
+model2222forecast.MAE
+
+model2222forecast.MAPE=mean(abs(model2222forecast.error)/abs(validation$mw)) 
+model2222forecast.MAPE
 
 
 
@@ -151,6 +201,19 @@ model2323 %>%
 
 checkresiduals(model2323)
 
+#Test against validation set
+#forecast compared to validation for auto model
+model2323forecast <- forecast::forecast(model2323, h = 168)
+
+#calculate the error for the first model
+model2323forecast.error = validation$mw - model2323forecast$mean
+
+#calculate the MAE and MAPE for the first model
+model2323forecast.MAE = mean(abs(model2323forecast.error))
+model2323forecast.MAE
+
+model2323forecast.MAPE=mean(abs(model2323forecast.error)/abs(validation$mw)) 
+model2323forecast.MAPE
 
 
 #Auto arima with seasonal differences
@@ -159,9 +222,27 @@ S.ARIMA <- auto.arima(energy, method="ML", seasonal = TRUE, D = 1, stepwise = TR
 summary(S.ARIMA)
 
 #Check residuals of the model built by auto arima
-energy %>% 
-  Arima(order=c(0,0,2), seasonal=c(0,1,2)) %>%
+automodel <- Arima(energy, order=c(0,0,2), seasonal=c(0,1,2))
+
+
+automodel %>%
   residuals() %>% ggtsdisplay()
 
-ggAcf(S.ARIMA$residuals)
-ggPacf(S.ARIMA$residuals)
+ggAcf(automodel$residuals)
+ggPacf(automodel$residuals)
+
+#Test against validation set
+#forecast compared to validation for auto model
+automodelforecast <- forecast::forecast(automodel, h = 168)
+
+#calculate the error for the first model
+automodelforecast.error = validation$mw - automodelforecast$mean
+
+#calculate the MAE and MAPE for the first model
+automodelforecast.MAE = mean(abs(automodelforecast.error))
+automodelforecast.MAE
+
+automodelforecast.MAPE=mean(abs(automodelforecast.error)/abs(validation$mw)) 
+automodelforecast.MAPE
+
+
