@@ -99,6 +99,13 @@ dummy_df_aug <- data.frame(cbind(seq(1:length(tseq_2022_aug)), c(rep(FALSE, (len
 #initialize model
 HW_add <- hw(energy_model, seasonal = "additive", h = 168)
 
+#show residual chart, ACF/PACF
+HW_add %>%
+  residuals() %>% ggtsdisplay()
+
+#show L-B test and white noise histogram
+checkresiduals(HW_add)
+
 #add column names
 colnames(whole_dummy_df) <- c("index", "forecast")
 colnames(dummy_df) <- c("index", "forecast")
