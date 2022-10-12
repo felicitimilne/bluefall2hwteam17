@@ -44,7 +44,7 @@ energy <- ts(data[,2], start = 2019 + 212/365, frequency = 8766)
 energy_model <- ts(data[,2], start = 2019 + 212/365, frequency = 24)
 
 #time plot
-energy_plot <- autoplot(energy) +
+energy_plot <- autoplot(energy, color = "#648fff") + 
   ggtitle("Hourly Energy Usage from 8/1/19 to 9/22/22") +
   xlab("Time") +
   ylab("Energy (megawatts)")
@@ -55,11 +55,11 @@ tseq <- seq.POSIXt(from = as.POSIXct("2019-08-01 00:00:00"), length.out = nrow(d
 #STL decomposition
 energy_stl <- stl(energy, s.window = 24)
 trend <- ggplot(data = data, aes(x = tseq, y = energy_stl$time.series[,"trend"])) + 
-  geom_line() + labs(x = "Time", y = "Energy (megawatts)", title = "Trend of Hourly Energy Usage") + 
+  geom_line(color = "#dc267f") + labs(x = "Time", y = "Energy (megawatts)", title = "Trend of Hourly Energy Usage") + 
   theme(plot.title = element_text(hjust = 0.5))
 
 season <- ggplot(data = data, aes(x = tseq, y = energy_stl$time.series[,"seasonal"])) + 
-  geom_line() + labs(x = "Time", y = "Energy (megawatts)", title = "Seasonality of Hourly Energy Usage") + 
+  geom_line(color = "#ffb000") + labs(x = "Time", y = "Energy (megawatts)", title = "Seasonality of Hourly Energy Usage") + 
   theme(plot.title = element_text(hjust = 0.5))
 
 error <- ggplot(data = data, aes(x = tseq, y = energy_stl$time.series[,"remainder"])) + 
