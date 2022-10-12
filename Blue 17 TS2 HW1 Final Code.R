@@ -100,11 +100,19 @@ dummy_df_aug <- data.frame(cbind(seq(1:length(tseq_2022_aug)), c(rep(FALSE, (len
 HW_add <- hw(energy_model, seasonal = "additive", h = 168)
 
 #show residual chart, ACF/PACF
-HW_add %>%
-  residuals() %>% ggtsdisplay()
+hw_resid_plot <- ggplot(data = whole_dummy_df[1:27576,], aes(x = tseq, y = HW_add$residuals)) + geom_point(color = "#648fff") + 
+  scale_x_datetime(date_labels = "%Y") + labs(x = "Time", y = "Residuals", title = "Additive HW Residuals")
+hw_acf <- ggAcf(HW_add$residuals) + labs(x = "Lag", y = "Autocorrelation", title = "ACF for Additive HW")
+hw_pacf <- ggPacf(HW_add$residuals) + labs(x = "Lag", y = "Partial Autocorrelation", title = "PACF for Additive HW")
 
-#show L-B test and white noise histogram
-checkresiduals(HW_add)
+#show white noise histogram
+hw_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = HW_add$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for Additive HW")
+
+grid.arrange(hw_resid_plot, hw_wn_hist, hw_acf, hw_pacf, nrow = 2, ncol = 2)
+
+#show L-B test
+checkresiduals(HW_add, plot = FALSE)
 
 #add column names
 colnames(whole_dummy_df) <- c("index", "forecast")
@@ -167,11 +175,19 @@ energy_model %>% diff(lag = 24) %>% ggtsdisplay()
 model1222 <- Arima(energy_model, order = c(1,0,2), seasonal = c(2,1,2))
 
 #show residual chart, ACF/PACF
-model1222 %>%
-  residuals() %>% ggtsdisplay()
+arima_1_resid_plot <- ggplot(data = whole_dummy_df[1:27576,], aes(x = tseq, y = model1222$residuals)) + geom_point(color = "#648fff") + 
+  scale_x_datetime(date_labels = "%Y") + labs(x = "Time", y = "Residuals", title = "ARIMA(1,0,2)(2,1,2)[24] Residuals")
+arima_1_acf <- ggAcf(model1222$residuals) + labs(x = "Lag", y = "Autocorrelation", title = "ACF for ARIMA(1,0,2)(2,1,2)[24]")
+arima_1_pacf <- ggPacf(model1222$residuals) + labs(x = "Lag", y = "Partial Autocorrelation", title = "PACF for ARIMA(1,0,2)(2,1,2)[24]")
+
+#show white noise histogram
+arima_1_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = model1222$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(1,0,2)(2,1,2)[24]")
+
+grid.arrange(arima_1_resid_plot, arima_1_wn_hist, arima_1_acf, arima_1_pacf, nrow = 2, ncol = 2)
 
 #show L-B test and white noise histogram
-checkresiduals(model1222)
+checkresiduals(model1222, plot = FALSE)
 
 #forecast
 model1222forecast <- forecast::forecast(model1222, h = 168)
@@ -192,22 +208,22 @@ aug_mw_with_forecast_arima_1 <- c(data$mw[begin_aug_2022:nrow(data)], model1222f
 ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_arima_1, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 2)(2, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #yearly subset
 ggplot(data = dummy_df, aes(x = tseq_2022, y = mw_with_forecast_arima_1, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 2)(2, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #subset from 8/1/2022
 ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_arima_1, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 2)(2, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #actual vs predicted data only for validation period
 ggplot(data = arima_model_1_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs ARIMA(1, 0, 2)(2, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs ARIMA(1,0,2)(2,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 
 #calculate the MAE and MAPE
 model1222forecast.error = val$mw - model1222forecast$mean
@@ -225,11 +241,20 @@ model1222forecast.MAPE
 model1323 <- Arima(energy_model, order = c(1,0,3), seasonal = c(2,1,3))
 
 #show residual chart, ACF/PACF
-model1323 %>%
-  residuals() %>% ggtsdisplay()
+arima_2_resid_plot <- ggplot(data = whole_dummy_df[1:27576,], aes(x = tseq, y = model1323$residuals)) + geom_point(color = "#648fff") + 
+  scale_x_datetime(date_labels = "%Y") + labs(x = "Time", y = "Residuals", title = "ARIMA(1,0,3)(2,1,3)[24] Residuals")
+arima_2_acf <- ggAcf(model1323$residuals) + labs(x = "Lag", y = "Autocorrelation", title = "ACF for ARIMA(1,0,3)(2,1,3)[24]")
+arima_2_pacf <- ggPacf(model1323$residuals) + labs(x = "Lag", y = "Partial Autocorrelation", title = "PACF for ARIMA(1,0,3)(2,1,3)[24]")
+
+#show white noise histogram
+arima_2_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = model1323$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(1,0,3)(2,1,3)[24]")
+
+grid.arrange(arima_2_resid_plot, arima_2_wn_hist, arima_2_acf, arima_2_pacf, nrow = 2, ncol = 2)
+
 
 #show L-B test, white noise histogram
-checkresiduals(model1323)
+checkresiduals(model1323, plot = FALSE)
 
 #forecast
 model1323forecast <- forecast::forecast(model1323, h = 168)
@@ -250,22 +275,22 @@ aug_mw_with_forecast_arima_2 <- c(data$mw[begin_aug_2022:nrow(data)], model1323f
 ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_arima_2, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 3)(2, 1, 3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,3)(2,1,3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #yearly subset
 ggplot(data = dummy_df, aes(x = tseq_2022, y = mw_with_forecast_arima_2, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 3)(2, 1, 3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,3)(2,1,3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #from 8/1/2022
 ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_arima_2, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 3)(2, 1, 3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,3)(2,1,3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #acutal vs predicted data only for validation period
 ggplot(data = arima_model_2_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs ARIMA(1, 0, 3)(2, 1, 3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs ARIMA(1,0,3)(2,1,3)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 
 #calculate the MAE and MAPE
 model1323forecast.error = val$mw - model1323forecast$mean
@@ -284,11 +309,20 @@ model1323forecast.MAPE
 #returns ARIMA(0,0,2)(0,1,2)[24] (run to save time)
 automodel <- Arima(energy_model, order = c(0, 0, 2), seasonal = c(0, 1, 2))
 #show residual plot, ACF/PACF
-automodel %>%
-  residuals() %>% ggtsdisplay()
+arima_3_resid_plot <- ggplot(data = whole_dummy_df[1:27576,], aes(x = tseq, y = automodel$residuals)) + geom_point(color = "#648fff") + 
+  scale_x_datetime(date_labels = "%Y") + labs(x = "Time", y = "Residuals", title = "ARIMA(0,0,2)(0,1,2)[24] Residuals")
+arima_3_acf <- ggAcf(automodel$residuals) + labs(x = "Lag", y = "Autocorrelation", title = "ACF for ARIMA(0,0,2)(0,1,2)[24]")
+arima_3_pacf <- ggPacf(automodel$residuals) + labs(x = "Lag", y = "Partial Autocorrelation", title = "PACF for ARIMA(0,0,2)(0,1,2)[24]")
+
+#show white noise histogram
+arima_3_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = automodel$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(0,0,2)(0,1,2)[24]")
+
+grid.arrange(arima_3_resid_plot, arima_3_wn_hist, arima_3_acf, arima_3_pacf, nrow = 2, ncol = 2)
+
 
 #show L-B test, white noise histogram
-checkresiduals(automodel)
+checkresiduals(automodel, plot = FALSE)
 
 #forecast
 automodelforecast <- forecast::forecast(automodel, h = 168)
@@ -309,22 +343,22 @@ aug_mw_with_forecast_arima_3 <- c(data$mw[begin_aug_2022:nrow(data)], automodelf
 ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0, 0, 2)(0, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #yearly subset
 ggplot(data = dummy_df, aes(x = tseq_2022, y = mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0, 0, 2)(0, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #subset from 8/1/2022
 ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0, 0, 2)(0, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 #actual vs predicted data only for validation period
 ggplot(data = arima_model_3_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs ARIMA(0, 0, 2)(0, 1, 2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
 
 #calculate the MAE and MAPE
 automodelforecast.error = val$mw - automodelforecast$mean
@@ -405,12 +439,12 @@ aug_test_mw_with_forecast_arima_1 <- c(train_val$mw[begin_aug_2022:nrow(train_va
 ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_arima_1, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 2)(2, 1, 2)[24] Test Forecast for 9/30/22-10/6/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 9/30/22-10/6/22", color = "Data")
 #actual vs predicted data only for test period
 ggplot(data = arima_model_1_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1, 0, 2)(2, 1, 2)[24] Test Forecast for 9/30/22-10/6/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 9/30/22-10/6/22", color = "Data")
 
 #calculate the MAE and MAPE for the test set
 model1222forecast_test.error = test$mw - model1222forecast_test$mean

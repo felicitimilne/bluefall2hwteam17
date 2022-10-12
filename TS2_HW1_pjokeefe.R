@@ -26,23 +26,15 @@ validation <- read.csv("C:/Users/cardu/OneDrive/Documents/School Work/AA 502/Tim
                        header = TRUE)
 head(validation)
 
-test <- read.csv("C:/Users/cardu/OneDrive/Documents/School Work/AA 502/Time Series 2/HW 1/hrl_load_metered - test2.csv",
-                       header = TRUE)
-head(test)
-
 #get rid of useless variables
 df <- df[,c(1,6)]
 
 validation <- validation[,c(1,6)]
 
-test <- test[,c(1,6)]
-
 #Change variable to a date time object
 df$datetime_beginning_ept <- mdy_hm(df$datetime_beginning_ept, tz = Sys.timezone())
 
 validation$datetime_beginning_ept <- mdy_hm(validation$datetime_beginning_ept, tz = Sys.timezone())
-
-test$datetime_beginning_ept <- mdy_hm(test$datetime_beginning_ept, tz = Sys.timezone())
 
 #Impute the average of previous and next observation to fix the zeros for DLS
 df[c(5280:5290),]
@@ -69,12 +61,12 @@ autoplot(decomp_stl)
 ggsubseriesplot(energy)
 
 #Create the holt winter's model
-HW <- hw(energy, seasonal = "additive", h = 168) #forecast a week out
+HW <- hw(energy, seasonal = "additive", h = 168)
 summary(HW)
 
 #Plot the forecasts from the holt-winters model
 autoplot(HW)+
-  autolayer(fitted(HW),series="Fitted")+ylab("Megawatts")
+  autolayer(fitted(HW),series="Fitted")+ylab("US Steel Shipments")
 
 #nsdiffs to check for stochastic or deterministic seasonality
 energy %>% nsdiffs()
@@ -133,7 +125,7 @@ model1323forecast.MAPE
 
 #Model 1,0,2,2,1,2
 
-model1222 <- Arima(energy, order = c(1,0,2), seasonal = c(2,1,2))
+model1222 <- Arima(energy_model, order = c(1,0,2), seasonal = c(2,1,2))
 
 model1222 %>%
   residuals() %>% ggtsdisplay()
@@ -207,8 +199,6 @@ model2323 <- Arima(energy, order = c(2,0,3), seasonal = c(2,1,3))
 model2323 %>%
   residuals() %>% ggtsdisplay()
 
-summary(model2323)
-
 checkresiduals(model2323)
 
 #Test against validation set
@@ -255,55 +245,4 @@ automodelforecast.MAE
 automodelforecast.MAPE=mean(abs(automodelforecast.error)/abs(validation$mw)) 
 automodelforecast.MAPE
 
-#combine training and validation dataset
-newdata <- rbind(df,validation)
 
-new_ts <- ts(newdata[,2], start = 2019, frequency = 24) 
-
-
-#retrain models on new data set
-model1222_test <- Arima(new_ts, order = c(1,0,2), seasonal = c(2,1,2))
-
-automodel_test<- Arima(new_ts, order=c(0,0,2), seasonal=c(0,1,2))
-
-model1323_test <- Arima(new_ts, order = c(1,0,3), seasonal = c(2,1,3))
-
-#MAE's and MAPE's on test data
-#forecast compared to validation for auto model
-model1222forecast_test <- forecast::forecast(model1222_test, h = 168)
-
-#calculate the error for the first model
-model1222forecast_test.error = test$mw - model1222forecast_test$mean
-
-#calculate the MAE and MAPE for the first model
-model1222forecast_test.MAE = mean(abs(model1222forecast_test.error))
-model1222forecast_test.MAE
-
-model1222forecast_test.MAPE=mean(abs(model1222forecast_test.error)/abs(test$mw)) 
-model1222forecast_test.MAPE
-
-#forecast compared to validation for auto model
-automodelforecast_test <- forecast::forecast(automodel_test, h = 168)
-
-#calculate the error for the first model
-automodelforecast_test.error = test$mw - automodelforecast_test$mean
-
-#calculate the MAE and MAPE for the first model
-automodelforecast_test.MAE = mean(abs(automodelforecast_test.error))
-automodelforecast_test.MAE
-
-automodelforecast_test.MAPE=mean(abs(automodelforecast_test.error)/abs(test$mw)) 
-automodelforecast_test.MAPE
-
-#forecast compared to validation for auto model
-model1323forecast_test <- forecast::forecast(model1323_test, h = 168)
-
-#calculate the error for the first model
-model1323forecast_test.error = test$mw - model1323forecast_test$mean
-
-#calculate the MAE and MAPE for the first model
-model1323forecast_test.MAE = mean(abs(model1323forecast_test.error))
-model1323forecast_test.MAE
-
-model1323forecast_test.MAPE=mean(abs(model1323forecast_test.error)/abs(test$mw)) 
-model1323forecast_test.MAPE
