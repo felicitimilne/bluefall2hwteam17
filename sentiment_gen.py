@@ -90,9 +90,10 @@ for i in range(len(lyric_df["Lyrics"])):
     emo_scores = emo_song.raw_emotion_scores
     emo_scores = {i : emo_scores[i] / np.sum(np.array(list(emo_scores.values()))) for i in emo_scores.keys()}
     emo_list = ['negative','joy','positive','anticipation','fear','sadness','trust','anger','disgust','surprise']
-    for i in range(len(emo_list)):
-        if emo_list[i] not in list(emo_scores.keys()):
-            emo_scores[emo_list[i]] = 0
+    
+    for y in range(len(emo_list)):
+        if emo_list[y] not in list(emo_scores.keys()):
+            emo_scores[emo_list[y]] = 0
     
     anger_list.append(emo_scores["anger"])
     antic_list.append(emo_scores["anticipation"])
