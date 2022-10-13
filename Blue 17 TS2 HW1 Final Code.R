@@ -340,20 +340,18 @@ aug_mw_with_forecast_arima_3 <- c(data$mw[begin_aug_2022:nrow(data)], automodelf
 #time plots with colored forecast
 
 #whole dataset
-ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
+grid.arrange(ggplot(data = whole_dummy_df, aes(x = tseq_with_forecast, y = whole_mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
-#yearly subset
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data"),
 ggplot(data = dummy_df, aes(x = tseq_2022, y = mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
-#subset from 8/1/2022
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data"),
 ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_arima_3, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(0,0,2)(0,1,2)[24] Forecast for 9/23/22-9/29/22", color = "Data"), ncol = 1)
 #actual vs predicted data only for validation period
 ggplot(data = arima_model_3_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
@@ -406,10 +404,14 @@ ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_wit
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
   labs(x = "Time", y = "Energy (megawatts)", title = "Additive HW Test Forecast for 9/30/22-10/6/22", color = "Data")
 #actual vs predicted data only for test period
-ggplot(data = add_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+grid.arrange(ggplot(data = add_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Additive HW Test Forecast for 9/30/22-10/6/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "Additive HW Test Forecast for 9/30/22-10/6/22", color = "Data"),
+ggplot(data = arima_model_1_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 9/30/22-10/6/22", color = "Data"), ncol = 1)
 
 #calculate the MAE and MAPE for the test set
 hwforecast_test.error = test$mw - HW_add_test$mean
@@ -454,3 +456,5 @@ model1222forecast_test.MAE
 
 model1222forecast_test.MAPE=mean(abs(model1222forecast_test.error)/test$mw) 
 model1222forecast_test.MAPE
+
+grid.arrange(arima_1_acf, arima_1_pacf, ncol=2)

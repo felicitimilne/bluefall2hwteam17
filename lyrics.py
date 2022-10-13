@@ -10,8 +10,6 @@ from lyricsgenius import Genius
 #import json
 import urllib
 from bs4 import BeautifulSoup as bs
-from nrclex import NRCLex
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import pandas as pd
 
 #Tests with Genius API
@@ -131,46 +129,6 @@ for i in range(len(song_list)):
         
     lyric_df = pd.DataFrame(list(zip(list(lyric_dict.keys()), list(lyric_dict.values()), list(length_dict.values()))), columns =['Song & Artist', 'Lyrics', 'Word Count'])
     lyric_df.to_csv("~/Downloads/lyrics_with_wc2.csv")
-    
-    sent_dict = {}
-    avg_sentiment = 0
-    avg_pos_sent = 0
-    avg_neg_sent = 0
-    pol = SentimentIntensityAnalyzer()
-    
-    for i in range(len(lyric_list_final)):
-        lyric_str = lyric_list_final[i]
-        print(lyric_str)
-        
-        #Get polarity scores
-        lyric_pol = pol.polarity_scores(lyric_str)
-        
-        avg_sentiment += lyric_pol["compound"]
-        avg_pos_sent += lyric_pol["pos"]
-        avg_neg_sent += lyric_pol["neg"]
-        
-        #Get emotion flags
-        line = NRCLex(text = lyric_str)
-        temp_emo_dict = line.affect_dict
-        
-        if len(temp_emo_dict.keys()) == 0:
-            print("No emotional words")
-            
-        else:
-            print("Emotional words found: ", temp_emo_dict)
-            sent_dict.update(temp_emo_dict)
-        
-        
-    avg_sentiment /= len(lyric_list_final)
-    avg_pos_sent /= len(lyric_list_final)
-    avg_neg_sent /= len(lyric_list_final)
-    
-    print("Emotional Words:", sent_dict)
-    print("Overall Sentiment:", avg_sentiment)
-    print("Positive:", avg_pos_sent)
-    print("Negative:", avg_neg_sent)
-    
-    accumulated_sent_dict[song_list[i]] = sent_dict
     
         
 #Tests with emotion reading text libraries
