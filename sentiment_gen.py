@@ -5,6 +5,7 @@ Created on Wed Oct 12 19:26:20 2022
 
 @author: noahjohnson
 """
+
 import pandas as pd
 import numpy as np
 import nltk
@@ -14,6 +15,7 @@ import string
 from polyglot.detect import Detector
 from polyglot.detect.base import logger as polyglot_logger
 import warnings
+
 polyglot_logger.setLevel("ERROR")
 warnings.filterwarnings ('ignore')
 
