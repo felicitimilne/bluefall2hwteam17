@@ -25,6 +25,7 @@ library(MASS)
 library(kableExtra)
 library(partykit)
 library(dbscan)
+library(ROCR)
 #library(knitr)
 
 #import data
@@ -94,6 +95,19 @@ sum(tscores!=train$Churn)/nrow(train)
 ### validation data:
 sum(scores!=validation$Churn)/nrow(validation)
 
+#plot ROC Curve
+tscores.prob <- predict(class.tree,type="prob")
+
+
+pred_val <-prediction(tscores.prob[,2],train$Churn)
+
+perf <- performance(pred_val, measure = "tpr", x.measure = "fpr")
+plot(perf, lwd = 3, col = "dodgerblue3", 
+     main = "ROC Cruve",
+     xlab = "True Positive Rate",
+     ylab = "False Positive Rate")
+abline(a = 0, b = 1, lty = 3)
+
 #################################################################
 
 #Recursive partitioning tree
@@ -125,3 +139,16 @@ sum(c.tscores!=train$Churn)/nrow(train)
 
 ### validation data:
 sum(c.scores!=validation$Churn)/nrow(validation)
+
+#plot ROC Curve
+c.tscores.prob <- predict(c.tree,type="prob")
+
+
+c.pred_val <-prediction(c.tscores.prob[,2],train$Churn)
+
+c.perf <- performance(c.pred_val, measure = "tpr", x.measure = "fpr")
+plot(c.perf, lwd = 3, col = "dodgerblue3", 
+     main = "ROC Cruve",
+     xlab = "True Positive Rate",
+     ylab = "False Positive Rate")
+abline(a = 0, b = 1, lty = 3)
