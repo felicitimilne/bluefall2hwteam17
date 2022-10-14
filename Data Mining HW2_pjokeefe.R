@@ -39,36 +39,31 @@ str(churn)
 #Check for rows with missing values and store them in a table
 missing <- churn[!complete.cases(churn$TotalCharges),]
 
-#set seed so we all get the same training, validation, train data set
+#set seed so we all get the same training, test, train data set
 set.seed(1905)
 
-#take 60/30/10 sample for train, validation, and test
-ss <- sample(1:3,size=nrow(churn),replace=TRUE,prob=c(0.6,0.3,0.1))
+#take 60/30/10 sample for train, test, and test
+ss <- sample(1:2,size=nrow(churn),replace=TRUE,prob=c(0.8,0.2))
 train <- churn[ss==1,]
-validation <- churn[ss==2,]
-test <- churn[ss==3,]
+test <- churn[ss==2,]
+
 
 #impute missing values with median and create missing variable
 
-#Repeat for validation and test using the training median
+#Repeat for test and test using the training median
 train$missing[is.na(train$TotalCharges)] <- 1
 train$missing[is.na(train$missing)] <- 0
 train$missing <- as.character(train$missing)
 
-validation$missing[is.na(validation$TotalCharges)] <- 1
-validation$missing[is.na(validation$missing)] <- 0
-validation$missing <- as.character(validation$missing)
+
 
 test$missing[is.na(test$TotalCharges)] <- 1
 test$missing[is.na(test$missing)] <- 0
 test$missing <- as.character(test$missing)
 
-median <- median(train$TotalCharges, na.rm = T)
 
-train$TotalCharges[is.na(train$TotalCharges)] <- median
-validation$TotalCharges[is.na(validation$TotalCharges)] <- median
-test$TotalCharges[is.na(test$TotalCharges)] <- median
-
+train$TotalCharges[is.na(train$TotalCharges)] <- 0
+test$TotalCharges[is.na(test$TotalCharges)] <- 0
 
 
 train[!complete.cases(train),]
@@ -85,15 +80,15 @@ print(class.tree)
 #Graph of the tree
 rpart.plot(class.tree)
 
-#Misclassification rate of training and validation
+#Misclassification rate of training and test
 tscores = predict(class.tree,type='class')
-scores = predict(class.tree, validation, type='class')
+scores = predict(class.tree, test, type='class')
 
 ##Training misclassification rate:
 sum(tscores!=train$Churn)/nrow(train)
 
-### validation data:
-sum(scores!=validation$Churn)/nrow(validation)
+### test data:
+sum(scores!=test$Churn)/nrow(test)
 
 #plot ROC Curve
 tscores.prob <- predict(class.tree,type="prob")
@@ -132,13 +127,13 @@ plot(c.tree)
 
 #Check Misclassification rates
 c.tscores = predict(c.tree,type='response')
-c.scores = predict(c.tree, validation, type='response')
+c.scores = predict(c.tree, test, type='response')
 
 ##Training misclassification rate:
 sum(c.tscores!=train$Churn)/nrow(train)
 
-### validation data:
-sum(c.scores!=validation$Churn)/nrow(validation)
+### test data:
+sum(c.scores!=test$Churn)/nrow(test)
 
 #plot ROC Curve
 c.tscores.prob <- predict(c.tree,type="prob")
