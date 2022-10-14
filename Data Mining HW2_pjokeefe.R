@@ -25,7 +25,6 @@ library(MASS)
 library(kableExtra)
 library(partykit)
 library(dbscan)
-library(Amelia)
 #library(knitr)
 
 #import data
@@ -39,15 +38,6 @@ str(churn)
 #Check for rows with missing values and store them in a table
 missing <- churn[!complete.cases(churn$TotalCharges),]
 
-#Change all categorical variables to factors except CustomerID
-churn[sapply(churn, is.character)] <- lapply(churn[sapply(churn, is.character)], 
-                                       as.factor)
-churn$customerID <- as.character(churn$customerID)
-
-churn$SeniorCitizen <- as.factor(churn$SeniorCitizen)
-
-str(churn)
-
 #set seed so we all get the same training, validation, train data set
 set.seed(1905)
 
@@ -58,11 +48,27 @@ validation <- churn[ss==2,]
 test <- churn[ss==3,]
 
 #impute missing values with median and create missing variable
+
+#Repeat for validation and test using the training median
 train$missing[is.na(train$TotalCharges)] <- 1
 train$missing[is.na(train$missing)] <- 0
-train$missing <- as.factor(train$missing)
+train$missing <- as.character(train$missing)
 
-train$TotalCharges[is.na(train$TotalCharges)] <- median(train$TotalCharges, na.rm = T)
+validation$missing[is.na(validation$TotalCharges)] <- 1
+validation$missing[is.na(validation$missing)] <- 0
+validation$missing <- as.character(validation$missing)
+
+test$missing[is.na(test$TotalCharges)] <- 1
+test$missing[is.na(test$missing)] <- 0
+test$missing <- as.character(test$missing)
+
+median <- median(train$TotalCharges, na.rm = T)
+
+train$TotalCharges[is.na(train$TotalCharges)] <- median
+validation$TotalCharges[is.na(validation$TotalCharges)] <- median
+test$TotalCharges[is.na(test$TotalCharges)] <- median
+
+
 
 train[!complete.cases(train),]
 str(train)
@@ -71,3 +77,51 @@ str(train)
 class.tree = rpart(Churn ~ . - customerID, data=train, method='class',
                 parms = list(split='gini'))
 summary(class.tree)
+
+
+print(class.tree)
+
+#Graph of the tree
+rpart.plot(class.tree)
+
+#Misclassification rate of training and validation
+tscores = predict(class.tree,type='class')
+scores = predict(class.tree, validation, type='class')
+
+##Training misclassification rate:
+sum(tscores!=train$Churn)/nrow(train)
+
+### validation data:
+sum(scores!=validation$Churn)/nrow(validation)
+
+#################################################################
+
+#Recursive partitioning tree
+
+#need character variables as factors, so create new data set
+c.train <- train
+
+c.train[sapply(c.train, is.character)] <- lapply(c.train[sapply(c.train, is.character)], 
+                                             as.factor)
+c.train$customerID <- as.character(c.train$customerID)
+
+c.train$SeniorCitizen <- as.factor(c.train$SeniorCitizen)
+
+str(c.train)
+
+#run model
+c.tree <- ctree(Churn ~ . - customerID, data=c.train)
+
+
+c.tree
+plot(c.tree)
+
+#Check Misclassification rates
+c.tscores = predict(c.tree,type='response')
+c.scores = predict(c.tree, validation, type='response')
+
+##Training misclassification rate:
+sum(c.tscores!=train$Churn)/nrow(train)
+
+### validation data:
+sum(c.scores!=validation$Churn)/nrow(validation)
