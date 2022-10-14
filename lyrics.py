@@ -85,7 +85,10 @@ for i in range(len(song_list)):
     wc_list = []
     
     for i in range(len(list(lyric_dict.keys()))):
-        lyric_list = lyric_dict[list(lyric_dict.keys())[i]].split("\n")
+        genius = Genius("ELYtGAm_VSwW8BveP9tclUoPtVsnrC_mlH5O9TaRPtpWIi3jzzWFhc6ANA2J5TOb")
+        genius_search = genius.search_song("Summer Love / Set the Mood (Prelude)", "Justin Timberlake")   
+        lyrics_str = genius_search.lyrics
+        lyric_list = lyrics_str.split("\n") #lyric_dict[list(lyric_dict.keys())[i]]
     #word_list = lyrics_str.replace("\n", " ").split(" ")
     #length_dict[song_list[i][0], song_list[i][1]] = len(word_list)
     
@@ -117,6 +120,7 @@ for i in range(len(song_list)):
             
         temp_str = temp_str.rstrip()
         lyrics_str = temp_str
+        print(lyrics_str)
         lyric_dict[list(lyric_dict.keys())[i]] = lyrics_str
         word_list = lyrics_str.replace("\n", " ").split(" ")
         #word_list = [i for i in word_list if i != ""]
