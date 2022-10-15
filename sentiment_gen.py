@@ -135,10 +135,7 @@ lyric_df["Sadness"] = sad_list
 lyric_df["Surprise"] = surp_list 
 lyric_df["Trust"] = trust_list 
 lyric_df["Expanded Valence"] = ev_list 
-lyric_df_nd = lyric_df.drop("Unnamed: 0", axis = 1)
-lyric_df_nd = lyric_df_nd.drop_duplicates()
-lyric_df_nd.to_csv("~/sent_emo_lyrics.csv")
+#lyric_df_nd = lyric_df.drop("Unnamed: 0", axis = 1)
+lyric_df = lyric_df.drop_duplicates()
+lyric_df.to_csv("/Users/noahjohnson/Downloads/bluefall2hwteam17/sent_emo_lyrics.csv")
 
-lyric_df_nd.sort_values(by = "Negative", ascending = False).head(10)
-lyric_df_nd.sort_values(by = "Negative Sentiment", ascending = False).head(10)
-(sorted(lyric_df_nd["Negative"])).head(10)
