@@ -42,7 +42,7 @@ missing <- churn[!complete.cases(churn$TotalCharges),]
 #set seed so we all get the same training, test, train data set
 set.seed(1905)
 
-#take 60/30/10 sample for train, test, and test
+#take 80/20 sample for train and test
 ss <- sample(1:2,size=nrow(churn),replace=TRUE,prob=c(0.8,0.2))
 train <- churn[ss==1,]
 test <- churn[ss==2,]
@@ -54,7 +54,6 @@ test <- churn[ss==2,]
 train$missing[is.na(train$TotalCharges)] <- 1
 train$missing[is.na(train$missing)] <- 0
 train$missing <- as.character(train$missing)
-
 
 
 test$missing[is.na(test$TotalCharges)] <- 1
@@ -98,7 +97,7 @@ pred_val <-prediction(tscores.prob[,2],train$Churn)
 
 perf <- performance(pred_val, measure = "tpr", x.measure = "fpr")
 plot(perf, lwd = 3, col = "dodgerblue3", 
-     main = "ROC Cruve",
+     main = "ROC Cruve of Classification Tree",
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
@@ -143,7 +142,7 @@ c.pred_val <-prediction(c.tscores.prob[,2],train$Churn)
 
 c.perf <- performance(c.pred_val, measure = "tpr", x.measure = "fpr")
 plot(c.perf, lwd = 3, col = "dodgerblue3", 
-     main = "ROC Cruve",
+     main = "ROC Cruve of Recursive Partitioning Tree",
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
