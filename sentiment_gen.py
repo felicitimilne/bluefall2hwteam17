@@ -19,7 +19,8 @@ import warnings
 polyglot_logger.setLevel("ERROR")
 warnings.filterwarnings ('ignore')
 
-lyric_df = pd.read_csv("~/Downloads/bluefall2hwteam17/lyrics_with_wc1.csv")
+#lyric_df = pd.read_csv("~/Downloads/bluefall2hwteam17/lyrics_with_wc1.csv")
+lyric_df = (pd.read_csv("~/Downloads/bluefall2hwteam17/sent_emo_lyrics.csv"))[["Song & Artist", "Lyrics", "Word Count"]]
 lyric_df_small = lyric_df.head(10)
 stop_words = nltk.corpus.stopwords.words("english")
 
@@ -28,6 +29,8 @@ lyric_str_list = []
 com_pol_list = []
 pos_pol_list = []
 neg_pol_list = []
+emo_dict_list = []
+emo_flag_list = []
 anger_list = []
 antic_list = []
 disg_list = []
@@ -44,6 +47,7 @@ for i in range(len(lyric_df["Lyrics"])):
     temp_lyrics = lyric_df["Lyrics"][i]
     temp_lyrics = temp_lyrics.translate(str.maketrans("", "", string.punctuation.replace("\'", "")))
     lyric_list = temp_lyrics.split(" ")
+    
     lyric_list_ns = []
     for k in range(len(lyric_list)):
         if lyric_list[k].lower() not in stop_words:
@@ -87,6 +91,8 @@ for i in range(len(lyric_df["Lyrics"])):
     #Get emotion flags
     emo_song = NRCLex(text = lyric_str)
     emo_dict = emo_song.affect_dict
+    emo_dict_list.append(emo_dict)
+    emo_flag_list.append(np.sum(np.array(list(emo_song.raw_emotion_scores.values()))))
     emo_scores = emo_song.raw_emotion_scores
     emo_scores = {i : emo_scores[i] / np.sum(np.array(list(emo_scores.values()))) for i in emo_scores.keys()}
     emo_list = ['negative','joy','positive','anticipation','fear','sadness','trust','anger','disgust','surprise']
@@ -108,13 +114,16 @@ for i in range(len(lyric_df["Lyrics"])):
     
     expanded_valence = emo_scores["anticipation"] + emo_scores["joy"] + emo_scores["positive"] + emo_scores["surprise"] + emo_scores["fear"] - emo_scores["anger"] - emo_scores["disgust"] - emo_scores["fear"] - emo_scores["negative"] - emo_scores["sadness"]     
     ev_list.append(expanded_valence)
-    print(lyric_df["Song & Artist"][i], "the #", str((i % 100) + 1), "song in", str((range(2006, 2022))[i // 100]), "done.")
+    #print(lyric_df["Song & Artist"][i], "the #", str((i % 100) + 1), "song in", str((range(2006, 2022))[i // 100]), "done.")
+    print(lyric_df["Song & Artist"][i], "song #", str(i + 1), "/", str(len(lyric_df["Lyrics"])), "done.")
     
 lyric_df["num_fw"] = fw_list
 lyric_df["Sent Lyrics"] = lyric_str_list
 lyric_df["Compound Sentiment"] = com_pol_list
 lyric_df["Positive Sentiment"] = pos_pol_list 
 lyric_df["Negative Sentiment"] = neg_pol_list
+lyric_df["Emotional Words"] = emo_dict_list
+lyric_df["Emo Flag Total"] = emo_flag_list
 lyric_df["Anger"] = anger_list 
 lyric_df["Anticipation"] = antic_list 
 lyric_df["Disgust"] = disg_list 
@@ -126,3 +135,7 @@ lyric_df["Sadness"] = sad_list
 lyric_df["Surprise"] = surp_list 
 lyric_df["Trust"] = trust_list 
 lyric_df["Expanded Valence"] = ev_list 
+#lyric_df_nd = lyric_df.drop("Unnamed: 0", axis = 1)
+lyric_df = lyric_df.drop_duplicates()
+lyric_df.to_csv("/Users/noahjohnson/Downloads/bluefall2hwteam17/sent_emo_lyrics.csv")
+

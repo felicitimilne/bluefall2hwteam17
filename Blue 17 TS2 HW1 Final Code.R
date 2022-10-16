@@ -107,9 +107,9 @@ hw_pacf <- ggPacf(HW_add$residuals) + labs(x = "Lag", y = "Partial Autocorrelati
 
 #show white noise histogram
 hw_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = HW_add$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for Additive HW")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for Additive HW")
 
-grid.arrange(hw_resid_plot, hw_wn_hist, hw_acf, hw_pacf, nrow = 2, ncol = 2)
+grid.arrange(hw_resid_plot, hw_wn_hist, ncol = 2)
 
 #show L-B test
 checkresiduals(HW_add, plot = FALSE)
@@ -182,7 +182,7 @@ arima_1_pacf <- ggPacf(model1222$residuals) + labs(x = "Lag", y = "Partial Autoc
 
 #show white noise histogram
 arima_1_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = model1222$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(1,0,2)(2,1,2)[24]")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for ARIMA(1,0,2)(2,1,2)[24]")
 
 grid.arrange(arima_1_resid_plot, arima_1_wn_hist, arima_1_acf, arima_1_pacf, nrow = 2, ncol = 2)
 
@@ -248,7 +248,7 @@ arima_2_pacf <- ggPacf(model1323$residuals) + labs(x = "Lag", y = "Partial Autoc
 
 #show white noise histogram
 arima_2_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = model1323$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(1,0,3)(2,1,3)[24]")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for ARIMA(1,0,3)(2,1,3)[24]")
 
 grid.arrange(arima_2_resid_plot, arima_2_wn_hist, arima_2_acf, arima_2_pacf, nrow = 2, ncol = 2)
 
@@ -316,7 +316,7 @@ arima_3_pacf <- ggPacf(automodel$residuals) + labs(x = "Lag", y = "Partial Autoc
 
 #show white noise histogram
 arima_3_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = automodel$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(0,0,2)(0,1,2)[24]")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for ARIMA(0,0,2)(0,1,2)[24]")
 
 grid.arrange(arima_3_resid_plot, arima_3_wn_hist, arima_3_acf, arima_3_pacf, nrow = 2, ncol = 2)
 
