@@ -95,7 +95,7 @@ sum(tscores!=train$Churn)/nrow(train)
 sum(scores!=test$Churn)/nrow(test)
 
 #plot ROC Curve
-tscores.prob <- predict(class.tree,type="prob")
+tscores.prob <- predict(class.tree,test,type="prob")
 
 
 pred_val <-prediction(tscores.prob[,2],train$Churn)
@@ -120,6 +120,14 @@ c.train$customerID <- as.character(c.train$customerID)
 
 c.train$SeniorCitizen <- as.factor(c.train$SeniorCitizen)
 
+c.test <- test
+
+c.test[sapply(c.test, is.character)] <- lapply(c.test[sapply(c.test, is.character)], 
+                                                 as.factor)
+c.test$customerID <- as.character(c.test$customerID)
+
+c.test$SeniorCitizen <- as.factor(c.test$SeniorCitizen)
+
 str(c.train)
 
 #run model
@@ -131,19 +139,19 @@ plot(c.tree)
 
 #Check Misclassification rates
 c.tscores = predict(c.tree,type='response')
-c.scores = predict(c.tree, test, type='response')
+c.scores = predict(c.tree, c.test, type='response')
 
 ##Training misclassification rate:
 sum(c.tscores!=train$Churn)/nrow(train)
 
 ### test data:
-sum(c.scores!=test$Churn)/nrow(test)
+sum(c.scores!=c.test$Churn)/nrow(c.test)
 
 #plot ROC Curve
-c.tscores.prob <- predict(c.tree,type="prob")
+c.tscores.prob <- predict(c.tree, c.test, type="prob")
 
 
-c.pred_val <-prediction(c.tscores.prob[,2],train$Churn)
+c.pred_val <-prediction(c.tscores.prob[,2],c.test$Churn)
 
 c.perf <- performance(c.pred_val, measure = "tpr", x.measure = "fpr")
 plot(c.perf, lwd = 3, col = "dodgerblue3", 
