@@ -98,7 +98,7 @@ sum(scores!=test$Churn)/nrow(test)
 tscores.prob <- predict(class.tree,test,type="prob")
 
 
-pred_val <-prediction(tscores.prob[,2],train$Churn)
+pred_val <-prediction(tscores.prob[,2],test$Churn)
 
 perf <- performance(pred_val, measure = "tpr", x.measure = "fpr")
 plot(perf, lwd = 3, col = "dodgerblue3", 
