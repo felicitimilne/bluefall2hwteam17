@@ -61,7 +61,7 @@ test <- churn[ss==3,]
 train$missing[is.na(train$TotalCharges)] <- 1
 train$missing[is.na(train$missing)] <- 0
 train$missing <- as.factor(train$missing)
-
+train$missing[train$missing == 1]
 train$TotalCharges[is.na(train$TotalCharges)] <- median(train$TotalCharges, na.rm = T)
 
 train[!complete.cases(train),]
