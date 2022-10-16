@@ -98,11 +98,12 @@ sum(scores!=test$Churn)/nrow(test)
 tscores.prob <- predict(class.tree,test,type="prob")
 
 
-pred_val <-prediction(tscores.prob[,2],train$Churn)
+pred_val <-prediction(tscores.prob[,2],test$Churn)
 
 perf <- performance(pred_val, measure = "tpr", x.measure = "fpr")
 plot(perf, lwd = 3, col = "dodgerblue3", 
      main = "ROC Curve of Classification Tree",
+     sub = paste("AUROC = 0.7814357"),
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
