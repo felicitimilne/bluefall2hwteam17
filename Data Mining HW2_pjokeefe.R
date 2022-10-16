@@ -102,7 +102,7 @@ pred_val <-prediction(tscores.prob[,2],train$Churn)
 
 perf <- performance(pred_val, measure = "tpr", x.measure = "fpr")
 plot(perf, lwd = 3, col = "dodgerblue3", 
-     main = "ROC Cruve of Classification Tree",
+     main = "ROC Curve of Classification Tree",
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
@@ -156,7 +156,7 @@ c.pred_val <-prediction(c.tscores.prob[,2],c.test$Churn)
 
 c.perf <- performance(c.pred_val, measure = "tpr", x.measure = "fpr")
 plot(c.perf, lwd = 3, col = "dodgerblue3", 
-     main = "ROC Cruve of Recursive Partitioning Tree",
+     main = "ROC Curve of Recursive Partitioning Tree",
      sub = paste("AUROC = 0.8288112"),
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
