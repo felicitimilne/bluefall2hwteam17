@@ -107,6 +107,7 @@ plot(perf, lwd = 3, col = "dodgerblue3",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
 
+auroc<-performance(pred_val, measure = "auc")@y.values
 #################################################################
 
 #Recursive partitioning tree
@@ -156,6 +157,9 @@ c.pred_val <-prediction(c.tscores.prob[,2],c.test$Churn)
 c.perf <- performance(c.pred_val, measure = "tpr", x.measure = "fpr")
 plot(c.perf, lwd = 3, col = "dodgerblue3", 
      main = "ROC Cruve of Recursive Partitioning Tree",
+     sub = paste("AUROC = 0.8288112"),
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
+
+c.auroc<-performance(c.pred_val, measure = "auc")@y.values
