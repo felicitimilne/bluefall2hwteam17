@@ -149,6 +149,7 @@ c.tree <- ctree(Churn ~ gender + SeniorCitizen + Partner + Dependents + tenure +
                 data=c.train, mincriterion = 0.99995)
 
 #prune(c.tree, cp = 0.05)
+c.tree
 summary(c.tree)
 plot(c.tree)
 
