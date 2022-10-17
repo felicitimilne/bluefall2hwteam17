@@ -74,8 +74,8 @@ train[!complete.cases(train),]
 str(train)
 
 #Create classification tree
-class.tree = rpart(Churn ~ . - customerID, data=train, method='class',
-                parms = list(split='gini'))
+class.tree = rpart(Churn ~ gender + SeniorCitizen + Partner + Dependents + tenure + PhoneService + MultipleLines + InternetService + OnlineSecurity + OnlineBackup + DeviceProtection + TechSupport + StreamingTV + StreamingMovies + Contract + PaperlessBilling + PaymentMethod + MonthlyCharges + TotalCharges + missing, 
+                   data=train, method='class', parms = list(split='gini'))
 summary(class.tree)
 
 
@@ -100,15 +100,27 @@ tscores.prob <- predict(class.tree,test,type="prob")
 
 pred_val <-prediction(tscores.prob[,2],test$Churn)
 
+auroc<-performance(pred_val, measure = "auc")@y.values
+auroc[[1]]
+
 perf <- performance(pred_val, measure = "tpr", x.measure = "fpr")
-plot(perf, lwd = 3, col = "dodgerblue3", 
+perf.df <- as.data.frame(c(perf@x.values, perf@y.values))
+colnames(perf.df) <- c("x.values", "y.values")
+roc <- ggplot(data = perf.df, aes(x = x.values, y = y.values)) + geom_line(color = "dodgerblue3") + 
+        labs(x = "True Positive Rate", y = "False Positive Rate", title = "ROC Curve of Classification Tree", hjust = 0.5) + 
+        theme(plot.title = element_text(hjust = 0.5)) + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray57") +
+        annotate("text", x = 0.5, y = 0.15, size = 6, label = paste("AUROC =", auroc[[1]]))
+roc
+
+
+roc <- plot(perf, lwd = 3, col = "dodgerblue3", 
      main = "ROC Curve of Classification Tree",
-     sub = paste("AUROC = 0.7814357"),
+     sub = paste("AUROC =", round(auroc[[1]], 4)),
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
 
-auroc<-performance(pred_val, measure = "auc")@y.values
+
 #################################################################
 
 #Recursive partitioning tree
@@ -133,10 +145,11 @@ c.test$SeniorCitizen <- as.factor(c.test$SeniorCitizen)
 str(c.train)
 
 #run model
-c.tree <- ctree(Churn ~ . - customerID, data=c.train)
+c.tree <- ctree(Churn ~ gender + SeniorCitizen + Partner + Dependents + tenure + PhoneService + MultipleLines + InternetService + OnlineSecurity + OnlineBackup + DeviceProtection + TechSupport + StreamingTV + StreamingMovies + Contract + PaperlessBilling + PaymentMethod + MonthlyCharges + TotalCharges + missing, 
+                data=c.train, mincriterion = 0.99995)
 
-
-c.tree
+#prune(c.tree, cp = 0.05)
+summary(c.tree)
 plot(c.tree)
 
 #Check Misclassification rates
@@ -155,12 +168,22 @@ c.tscores.prob <- predict(c.tree, c.test, type="prob")
 
 c.pred_val <-prediction(c.tscores.prob[,2],c.test$Churn)
 
+c.auroc<-performance(c.pred_val, measure = "auc")@y.values
+c.auroc[[1]]
+
 c.perf <- performance(c.pred_val, measure = "tpr", x.measure = "fpr")
+cperf.df <- as.data.frame(c(c.perf@x.values, c.perf@y.values))
+colnames(cperf.df) <- c("x.values", "y.values")
+c.roc <- ggplot(data = cperf.df, aes(x = x.values, y = y.values)) + geom_line(color = "dodgerblue3") + 
+        labs(x = "True Positive Rate", y = "False Positive Rate", title = "ROC Curve of Recursive Partitioning Tree", hjust = 0.5) + 
+        theme(plot.title = element_text(hjust = 0.5)) + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray57") +
+        annotate("text", x = 0.5, y = 0.15, size = 6, label = paste("AUROC =", c.auroc[[1]]))
+c.roc
 plot(c.perf, lwd = 3, col = "dodgerblue3", 
      main = "ROC Curve of Recursive Partitioning Tree",
-     sub = paste("AUROC = 0.8288112"),
+     sub = paste("AUROC =", round(c.auroc[[1]], 4)),
      xlab = "True Positive Rate",
      ylab = "False Positive Rate")
 abline(a = 0, b = 1, lty = 3)
 
-c.auroc<-performance(c.pred_val, measure = "auc")@y.values
+grid.arrange(roc, c.roc, nrow = 1)
