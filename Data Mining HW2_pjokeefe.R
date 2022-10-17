@@ -109,7 +109,7 @@ colnames(perf.df) <- c("x.values", "y.values")
 roc <- ggplot(data = perf.df, aes(x = x.values, y = y.values)) + geom_line(color = "dodgerblue3") + 
         labs(x = "True Positive Rate", y = "False Positive Rate", title = "ROC Curve of Classification Tree", hjust = 0.5) + 
         theme(plot.title = element_text(hjust = 0.5)) + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray57") +
-        annotate("text", x = 0.5, y = 0.15, size = 6, label = paste("AUROC =", auroc[[1]]))
+        annotate("text", x = 0.5, y = 0.15, size = 6, label = paste("AUROC =", round(auroc[[1]], 4)))
 roc
 
 
@@ -178,7 +178,7 @@ colnames(cperf.df) <- c("x.values", "y.values")
 c.roc <- ggplot(data = cperf.df, aes(x = x.values, y = y.values)) + geom_line(color = "dodgerblue3") + 
         labs(x = "True Positive Rate", y = "False Positive Rate", title = "ROC Curve of Recursive Partitioning Tree", hjust = 0.5) + 
         theme(plot.title = element_text(hjust = 0.5)) + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray57") +
-        annotate("text", x = 0.5, y = 0.15, size = 6, label = paste("AUROC =", c.auroc[[1]]))
+        annotate("text", x = 0.5, y = 0.15, size = 6, label = paste("AUROC =", round(c.auroc[[1]], 4)))
 c.roc
 plot(c.perf, lwd = 3, col = "dodgerblue3", 
      main = "ROC Curve of Recursive Partitioning Tree",
@@ -188,3 +188,66 @@ plot(c.perf, lwd = 3, col = "dodgerblue3",
 abline(a = 0, b = 1, lty = 3)
 
 grid.arrange(roc, c.roc, nrow = 1)
+
+###filtering / subsetting data based on tree rules
+mtm_dsl <- c.train %>% filter(c.train$Contract == "Month-to-month" & c.train$InternetService != "Fiber optic")
+# 2504 --> one,two year
+# 0.4415459 --> 1371 / (1371 + 1734)
+sum(mtm_dsl$TotalCharges)
+# total charges = $872,949.8
+mean(mtm_dsl$TotalCharges) 
+# avg total  = $636.72
+sum(mtm_dsl$MonthlyCharges)
+# monthly charges = $56,480.05
+mean(mtm_dsl$MonthlyCharges) 
+# avg monthly  = $41.20
+
+mtm_fiber <- c.train %>% filter(c.train$Contract == "Month-to-month" & c.train$InternetService == "Fiber optic")
+# 0.5584541 --> 1734 / (1371 + 1734)
+sum(mtm_fiber$TotalCharges)
+# total charges = $3,446,269
+mean(mtm_fiber$TotalCharges) 
+# avg total  = $1,987.47
+sum(mtm_fiber$MonthlyCharges) 
+# monthly charges = $151,121.4
+mean(mtm_fiber$MonthlyCharges) 
+# avg monthly  = $87.15
+
+
+mtm_fiber_long <- c.train %>% filter(c.train$Contract == "Month-to-month" & c.train$InternetService == "Fiber optic" & c.train$tenure >= 15)
+# 0.5415225 --> 939 / 1734
+sum(mtm_fiber_long$TotalCharges)
+# total charges = $3,077,072
+mean(mtm_fiber_long$TotalCharges) 
+# avg total  = $3,276.97
+sum(mtm_fiber_long$MonthlyCharges) 
+# monthly charges = $85,453.15
+mean(mtm_fiber_long$MonthlyCharges) 
+# avg monthly  = $91.00
+
+mtm_fiber_short <- c.train %>% filter(c.train$Contract == "Month-to-month" & c.train$InternetService == "Fiber optic" & c.train$tenure < 15)
+# 0.4584775 --> 795/ 1734
+sum(mtm_fiber_short$TotalCharges)
+# total charges = $369,197.10
+mean(mtm_fiber_short$TotalCharges) 
+# avg total  = $464.40
+sum(mtm_fiber_short$MonthlyCharges) 
+# monthly charges = $65,668.20
+mean(mtm_fiber_short$MonthlyCharges) 
+# avg monthly  = $82.60
+
+sum(c.train$MonthlyCharges)
+# $364,836.5 
+
+#mtm dsl + overall fiber divided by total monthly charges
+(56480.05+151121.4) / 364836.5
+
+#dsl proportion
+56480.05 / 364836.5
+#fiber overall proportion
+151121.4 / 364836.5
+#fiber 15+ proportion
+85453.15 / 364836.5
+#fiber short proportion
+65668.20 / 364836.5
+
