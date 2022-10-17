@@ -39,16 +39,13 @@ teens4$gender[is.na(teens4$gender)] <- 'missing'
 teens4 <- teens4 %>% mutate(gender = ifelse(gender == 'M',1,ifelse(gender =='F',2,3)))
 
 str(teens4)
+
+#histograms of all variables
 hist.data.frame(teens4)
 
 for (i in 3:ncol(teens4)) {
   hist(teens4[,i])
 }
-
-for (i in 3:ncol(teens4)) {
-  print(IQR(teens4[,i]) *1.5)
-}
-summary(teens4)
 
 teens4_norm = teens4
 
@@ -62,14 +59,26 @@ for (i in 3:ncol(teens4)) {
   hist(teens4_norm[,i])
 }
 
-test <- kmeans(teens4_norm, centers = 6, nstart = 50)
-test$withinss
+
+
+#set seed for consistent results
+set.seed(12964)
+
+#calculate within SS for up to 16 clusters and find elbow
+withinss <- NULL
+for (i in 2:16) {
+  test1 <- kmeans(teens4_norm, centers = i, nstart = 50)
+  print(sum(test1$withinss))
+  withinss <- c(withinss, sum(test1$withinss))
+}
+
+plot(withinss)
+
+
+#Chose center of 9 due to elbow plot
+test <- kmeans(teens4_norm, centers = 9, nstart = 50)
+
 
 fviz_cluster(test, data = teens4_norm)
 
 
-set.seed(12964)
-
-fviz_nbclust(teens4_norm, kmeans, method = "silhouette",k.max = 5)
-
-NbClust(teens4_norm,method="kmeans",min.nc=2,max.nc = 5)
