@@ -112,7 +112,7 @@ for i in range(len(lyric_df["Lyrics"])):
     surp_list.append(emo_scores["surprise"])
     trust_list.append(emo_scores["trust"])
     
-    expanded_valence = emo_scores["anticipation"] + emo_scores["joy"] + emo_scores["positive"] + emo_scores["surprise"] + emo_scores["fear"] - emo_scores["anger"] - emo_scores["disgust"] - emo_scores["fear"] - emo_scores["negative"] - emo_scores["sadness"]     
+    expanded_valence = emo_scores["anticipation"] + emo_scores["joy"] + emo_scores["positive"] + emo_scores["surprise"] + emo_scores["trust"] - emo_scores["anger"] - emo_scores["disgust"] - emo_scores["fear"] - emo_scores["negative"] - emo_scores["sadness"]     
     ev_list.append(expanded_valence)
     #print(lyric_df["Song & Artist"][i], "the #", str((i % 100) + 1), "song in", str((range(2006, 2022))[i // 100]), "done.")
     print(lyric_df["Song & Artist"][i], "song #", str(i + 1), "/", str(len(lyric_df["Lyrics"])), "done.")

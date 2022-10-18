@@ -57,12 +57,12 @@ for (i in 3:ncol(teens4)) {
 
 teens4_scale <- scale(teens4_gender)
 
-fviz_nbclust(teens4_scale, kmeans, method = "wss", k.max = 5)
+#fviz_nbclust(teens4_scale, kmeans, method = "wss", k.max = 5)
 
 k1_list = c()
 k1_df <- data.frame()
 colnames(k1_df) <- c("Clusters", "WSS")
-for (i in 11:16) {
+for (i in 2:16) {
   k1 <- kmeans(teens4_scale, centers = i, nstart = 100)
   k1_list <- append(k1_list, k1)
   k1_df <- rbind(k1_df, c(i, k1$tot.withinss))
@@ -70,6 +70,25 @@ for (i in 11:16) {
 
 ggplot(data = k1_df, aes(x = Clusters, y = WSS)) + geom_line()
 
+k1_list_n = c()
+k1_df_n <- data.frame()
+colnames(k1_df_n) <- c("Clusters", "WSS")
+for (j in 2:16) {
+  k1_n <- kmeans(teens4_norm, centers = j, nstart = 100)
+  k1_list_n <- append(k1_list_n, k1_n)
+  k1_df_n <- rbind(k1_df_n, c(j, k1_n$tot.withinss))
+}
+
+ggplot(data = k1_df_n, aes(x = Clusters, y = WSS)) + geom_line()
+
+cand_model <- kmeans(teens4_norm, centers = 9, nstart = 100)
+model_df <- data.frame(cand_model$centers)
+ranks_list = c()
+for (k in colnames(model_df)) {
+  model_df_temp <- model_df[k]
+  model_df_temp <- model_df_temp %>% arrange(k) %>% mutate(rank = row_number())
+  ranks_list <- append(ranks_list, c(model_df_temp$rank))
+}
 
 teen_pca <- prcomp(teens4_gender, scale = F)
 tp_data <- cbind.data.frame(teen_pca$x[,1], teen_pca$x[,2], teen_pca$x[,3], teen_pca$x[,4], teen_pca$x[,5], as.factor(k1$cluster))
