@@ -1,4 +1,4 @@
-ta_metrics <- read.csv("/Users/noahjohnson/Downloads/bluefall2hwteam17/yearly_sent_metrics.csv")
+ta_metrics <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/yearly_sent_metrics.csv")
 
 library(tidyverse)
 library(ggplot2)
@@ -9,6 +9,14 @@ ta_metrics <- ta_metrics %>% mutate(Avg.Anger = -1 * Avg.Anger, Avg.Disgust = -1
            Avg.Fear = -1 * Avg.Fear, Avg.Neg = -1 * Avg.Neg, Avg.Sadness = -1 * Avg.Sadness) %>% 
   rename(Neg.Anger = Avg.Anger, Neg.Disgust = Avg.Disgust, Neg.Fear = Avg.Fear, Neg.Negative = Avg.Neg, Neg.Sadness = Avg.Sadness, 
          Pos.Anticipation = Avg.Antic, Pos.Joy = Avg.Joy, Pos.Positive = Avg.Pos, Pos.Surprise = Avg.Surprise, Pos.Trust = Avg.Trust)
+
+cor(ta_metrics$Avg.Exp.Valence, ta_metrics$Avg.GS.Index)
+
+ta_metrics_2008 <- ta_metrics[c(7:16), ]
+
+cor(ta_metrics_2008$Avg.Exp.Valence, ta_metrics_2008$Avg.GS.Index)
+
+ggplot(data = ta_metrics, aes(x = Avg.Exp.Valence, y = Avg.GS.Index)) + geom_point()
 
 #ta_metrics <- ta_metrics %>% mutate(Avg.Exp.Valence = Neg.Anger + Pos.Anticipation + Neg.Disgust + Neg.Fear + Pos.Joy + Neg.Negative + Pos.Positive + Neg.Sadness + Pos.Surprise + Pos.Trust)
   
@@ -54,23 +62,23 @@ ggplot(data = tam_2019_20_21) + geom_bar(aes(x = Metric, y = Value , fill = Type
 
 from_2012 <- ta_metrics %>% filter(Year >= 2012)
 
-from_2012_long <- from_2012 %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 21:22)) %>% pivot_longer(cols = -1, names_to = "Metric")
+from_2012_long <- from_2012 %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 20, 22)) %>% pivot_longer(cols = -1, names_to = "Metric")
 
 to_2012 <- ta_metrics %>% filter(Year <= 2011)
 
-to_2012_long <- to_2012 %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 21)) %>% pivot_longer(cols = -1, names_to = "Metric")
+to_2012_long <- to_2012 %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 20)) %>% pivot_longer(cols = -1, names_to = "Metric")
 
-long_sent <- ta_metrics %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 21)) %>% pivot_longer(cols = -1, names_to = "Metric")
+long_sent <- ta_metrics %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 20)) %>% pivot_longer(cols = -1, names_to = "Metric")
 
 ggplot(data = long_sent, aes(x = Year, y = value, color = Metric)) + geom_line() + 
-  scale_y_continuous(sec.axis = sec_axis(~.-0.5, name = "Expanded Valence")) +
+  scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*(1/800)-0.25 , name = "Expanded Valence")) +
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) + 
   scale_color_manual(labels = c("Expanded Valence", "Global Sentiment Indicator"), values = c("#648fff", "#ffb000")) +
   labs(x = "Year", y = "Combined Sentiment Index", col = "Sentiment Metric", title = "Popular Song Sentiment vs Global Economic Sentiment")
 
 
 ggplot(data = to_2012_long, aes(x = Year, y = value, color = Metric)) + geom_line() + 
-  scale_y_continuous(sec.axis = sec_axis(~.-0.5, name = "Expanded Valence")) +
+  scale_y_continuous("Avg.GS.Index", sec.axis = sec_axis(~.-0.5, name = "Expanded Valence")) +
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) + 
   scale_color_manual(labels = c("Expanded Valence", "Global Sentiment Indicator"), values = c("#648fff", "#ffb000")) +
   labs(x = "Year", y = "Combined Sentiment Index", col = "Sentiment Metric", title = "Popular Song Sentiment vs Global Economic Sentiment until 2012")
@@ -85,6 +93,12 @@ ggplot(data = twitter_only, aes(x = Year, y = value, color = Metric)) + geom_lin
   
 
 comb_metr_df <- data.frame(rbind(to_2012_long, twitter_only)) %>% mutate(Metric2 = ifelse(Metric == "Avg.Exp.Valence", Metric, "Sent.Index"))
+comb_metr_df_wide <- comb_metr_df %>% dplyr::select(-Metric) %>% pivot_wider(names_from = Metric2, values_from = value)
+comb_metr_df_wide_2019 <- comb_metr_df_wide[c(1:13, 16),]
+
+cor(comb_metr_df_wide_2019$Avg.Exp.Valence, comb_metr_df_wide_2019$Sent.Index)
+
+ggplot(data = comb_metr_df_wide, aes(x = Avg.Exp.Valence, y = Sent.Index)) + geom_point()
 
 ggplot(data = comb_metr_df, aes(x = Year, y = value, color = interaction(Metric, Metric2))) + geom_line() + 
   scale_y_continuous(sec.axis = sec_axis(~.-0.5, name = "Expanded Valence")) +
