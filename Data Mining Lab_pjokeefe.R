@@ -1,4 +1,4 @@
-
+library(purrr)
 library(arules)
 library(arulesViz)
 library(ggplot2)
@@ -78,7 +78,16 @@ plot(withinss)
 #Chose center of 9 due to elbow plot
 test <- kmeans(teens4_norm, centers = 9, nstart = 50)
 
+print(sum(test$withinss))
 
 fviz_cluster(test, data = teens4_norm)
 
+#Assign each observation to a cluster
+profile.kmeans <- cbind(teens4_norm,test$cluster)
 
+#Get summary statistic for each cluster
+clusters <- profile.kmeans %>%
+  split(test$cluster) %>%
+  map(summary)
+
+clusters$`8`
