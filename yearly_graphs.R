@@ -14,7 +14,7 @@ cor(ta_metrics$Avg.Exp.Valence, ta_metrics$Avg.GS.Index)
 
 ta_metrics_2008 <- ta_metrics[c(7:16), ]
 
-cor(ta_metrics_2008$Avg.Exp.Valence, ta_metrics_2008$Avg.GS.Index)
+cor(ta_metrics$Avg.Comp.Sent, ta_metrics$Avg.GS.Indicator)
 
 ggplot(data = ta_metrics, aes(x = Avg.Exp.Valence, y = Avg.GS.Index)) + geom_point()
 
@@ -68,7 +68,14 @@ to_2012 <- ta_metrics %>% filter(Year <= 2011)
 
 to_2012_long <- to_2012 %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 20)) %>% pivot_longer(cols = -1, names_to = "Metric")
 
-long_sent <- ta_metrics %>% mutate(Avg.Exp.Valence = Avg.Exp.Valence + 0.5) %>% dplyr::select(c(2, 19, 20)) %>% pivot_longer(cols = -1, names_to = "Metric")
+ta_metrics_names <- colnames(ta_metrics)
+ta_metrics_sp <- data.frame(cbind(ta_metrics, c(0.1561, 0.0548, -0.3655, 0.2594, 0.1482, 0.0210, 0.1589, 0.3215,
+                                                0.1352, 0.0138, 0.1177, 0.2161, -0.0423, 0.3121, 0.1802, 0.2847)))
+
+colnames(ta_metrics_sp) <- c(ta_metrics_names, "SP.500")
+long_sent <- ta_metrics_sp %>% dplyr::select(c(2, 19, 23)) %>% pivot_longer(cols = -1, names_to = "Metric")
+
+cor(ta_metrics_sp$SP.500, ta_metrics_sp$Avg.Exp.Valence)
 
 ggplot(data = long_sent, aes(x = Year, y = value, color = Metric)) + geom_line() + 
   scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*(1/800)-0.25 , name = "Expanded Valence")) +

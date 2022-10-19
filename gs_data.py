@@ -107,13 +107,13 @@ for i in range(16):
     temp_ev_list = []
     
     for j in range(len(song_list)):
-        temp_partition = lyric_df.loc[lyric_df["Song & Artist"] == song_list[j]]
-        temp_wc_list.append(float(temp_partition["Word Count"].drop_duplicates()))
+        temp_partition = lyric_df.loc[lyric_df["Song...Artist"] == song_list[j]]
+        temp_wc_list.append(float(temp_partition["Word.Count"].drop_duplicates()))
         temp_fw_list.append(float(temp_partition["num_fw"].drop_duplicates()))
-        temp_comp_list.append(float(temp_partition["Compound Sentiment"].drop_duplicates()))
-        temp_ps_list.append(float(temp_partition["Positive Sentiment"].drop_duplicates()))
-        temp_ns_list.append(float(temp_partition["Negative Sentiment"].drop_duplicates()))
-        temp_ef_list.append(float(temp_partition["Emo Flag Total"].drop_duplicates()))
+        temp_comp_list.append(float(temp_partition["Compound.Sentiment"].drop_duplicates()))
+        temp_ps_list.append(float(temp_partition["Positive.Sentiment"].drop_duplicates()))
+        temp_ns_list.append(float(temp_partition["Negative.Sentiment"].drop_duplicates()))
+        temp_ef_list.append(float(temp_partition["Emo.Flag.Total"].drop_duplicates()))
         temp_anger_list.append(float(temp_partition["Anger"].drop_duplicates()))
         temp_antic_list.append(float(temp_partition["Anticipation"].drop_duplicates()))
         temp_disg_list.append(float(temp_partition["Disgust"].drop_duplicates()))
@@ -124,7 +124,7 @@ for i in range(16):
         temp_sad_list.append(float(temp_partition["Sadness"].drop_duplicates()))
         temp_surp_list.append(float(temp_partition["Surprise"].drop_duplicates()))
         temp_trust_list.append(float(temp_partition["Trust"].drop_duplicates()))
-        temp_ev_list.append(float(temp_partition["Expanded Valence"].drop_duplicates()))
+        temp_ev_list.append(float(temp_partition["Expanded.Valence"].drop_duplicates()))
     
     yearly_wc.append(np.array(temp_wc_list).mean())
     yearly_fw.append(np.array(temp_fw_list).mean())

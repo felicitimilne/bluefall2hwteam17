@@ -137,5 +137,8 @@ lyric_df["Trust"] = trust_list
 lyric_df["Expanded Valence"] = ev_list 
 #lyric_df_nd = lyric_df.drop("Unnamed: 0", axis = 1)
 lyric_df = lyric_df.drop_duplicates()
+
+
+
 lyric_df.to_csv("/Users/noahjohnson/Downloads/bluefall2hwteam17/sent_emo_lyrics.csv")
 

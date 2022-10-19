@@ -36,6 +36,17 @@ plt.xlabel("Year")
 plt.ylabel("Avg Expanded Valence")
 plt.show()
 
+plt.bar(list(yes_df.columns)[8:18], list(yes_df.iloc[13][['Avg Anger', 'Avg Antic', 'Avg Disgust', 'Avg Fear', 'Avg Joy',\
+                                                     'Avg Neg', 'Avg Pos', 'Avg Sadness', 'Avg Surprise', 'Avg Trust']]))
+
+plt.plot(yes_df["Year"], yes_df["Avg Comp Sent"])
+#plt.plot(yes_df["Year"], [0 for i in range(len(yes_df["Year"]))], linestyle = "--")
+#plt.plot(2019, yes_df["Avg Comp Sent"][13] - 0.001, marker="o", markersize=8, markeredgecolor = "mediumvioletred", markerfacecolor = "mediumvioletred")
+plt.title("Yearly Average Compound Sentiment")
+plt.xlabel("Year")
+plt.ylabel("Avg Comp Sent")
+plt.show()
+
 sns.set_theme(style = "darkgrid")
 ev_plot = sns.relplot(data = yes_df, x = "Year", y = "Avg Exp Valence", kind = "line")
 

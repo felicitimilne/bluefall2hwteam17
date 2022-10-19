@@ -1,0 +1,1034 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20214.22.0915.0348                               -->
+<workbook original-version='18.1' source-build='2021.4.11 (20214.22.0915.0348)' source-platform='mac' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AccessibleZoneTabOrder.true...AccessibleZoneTabOrder />
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <AutoCreateAndUpdateDSDPhoneLayouts />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SetMembershipControl />
+    <SheetIdentifierTracking />
+    <SortTagCleanup />
+    <WindowsPersistSimpleIdentifiers />
+    <WorksheetBackgroundTransparency />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource caption='yearly_sent_metrics' inline='true' name='federated.1yyrskj19u99zu0zoj43o18vwo2v' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='yearly_sent_metrics' name='textscan.0ogf8f20hx6ijg17848e51n0hgox'>
+            <connection class='textscan' directory='/Users/noahjohnson/Downloads/bluefall2hwteam17' filename='yearly_sent_metrics.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.0ogf8f20hx6ijg17848e51n0hgox' name='yearly_sent_metrics.csv' table='[yearly_sent_metrics#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='integer' name='F1' ordinal='0' />
+            <column datatype='integer' name='Year' ordinal='1' />
+            <column datatype='real' name='Avg Word Count' ordinal='2' />
+            <column datatype='real' name='Avg Foreign Words' ordinal='3' />
+            <column datatype='real' name='Avg Comp Sent' ordinal='4' />
+            <column datatype='real' name='Avg Pos Sent' ordinal='5' />
+            <column datatype='real' name='Avg Neg Sent' ordinal='6' />
+            <column datatype='real' name='Avg Emo Flags' ordinal='7' />
+            <column datatype='real' name='Avg Anger' ordinal='8' />
+            <column datatype='real' name='Avg Antic' ordinal='9' />
+            <column datatype='real' name='Avg Disgust' ordinal='10' />
+            <column datatype='real' name='Avg Fear' ordinal='11' />
+            <column datatype='real' name='Avg Joy' ordinal='12' />
+            <column datatype='real' name='Avg Neg' ordinal='13' />
+            <column datatype='real' name='Avg Pos' ordinal='14' />
+            <column datatype='real' name='Avg Sadness' ordinal='15' />
+            <column datatype='real' name='Avg Surprise' ordinal='16' />
+            <column datatype='real' name='Avg Trust' ordinal='17' />
+            <column datatype='real' name='Avg Exp Valence' ordinal='18' />
+            <column datatype='real' name='Avg GS Index' ordinal='19' />
+            <column datatype='real' name='Avg GS Indicator' ordinal='20' />
+            <column datatype='real' name='Avg Twitter Sent' ordinal='21' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.0ogf8f20hx6ijg17848e51n0hgox' name='yearly_sent_metrics.csv' table='[yearly_sent_metrics#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='integer' name='F1' ordinal='0' />
+            <column datatype='integer' name='Year' ordinal='1' />
+            <column datatype='real' name='Avg Word Count' ordinal='2' />
+            <column datatype='real' name='Avg Foreign Words' ordinal='3' />
+            <column datatype='real' name='Avg Comp Sent' ordinal='4' />
+            <column datatype='real' name='Avg Pos Sent' ordinal='5' />
+            <column datatype='real' name='Avg Neg Sent' ordinal='6' />
+            <column datatype='real' name='Avg Emo Flags' ordinal='7' />
+            <column datatype='real' name='Avg Anger' ordinal='8' />
+            <column datatype='real' name='Avg Antic' ordinal='9' />
+            <column datatype='real' name='Avg Disgust' ordinal='10' />
+            <column datatype='real' name='Avg Fear' ordinal='11' />
+            <column datatype='real' name='Avg Joy' ordinal='12' />
+            <column datatype='real' name='Avg Neg' ordinal='13' />
+            <column datatype='real' name='Avg Pos' ordinal='14' />
+            <column datatype='real' name='Avg Sadness' ordinal='15' />
+            <column datatype='real' name='Avg Surprise' ordinal='16' />
+            <column datatype='real' name='Avg Trust' ordinal='17' />
+            <column datatype='real' name='Avg Exp Valence' ordinal='18' />
+            <column datatype='real' name='Avg GS Index' ordinal='19' />
+            <column datatype='real' name='Avg GS Indicator' ordinal='20' />
+            <column datatype='real' name='Avg Twitter Sent' ordinal='21' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>F1</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[F1]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>F1</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Year</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Year]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Year</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Word Count</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Word Count]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Word Count</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Foreign Words</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Foreign Words]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Foreign Words</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Comp Sent</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Comp Sent]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Comp Sent</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Pos Sent</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Pos Sent]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Pos Sent</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Neg Sent</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Neg Sent]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Neg Sent</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Emo Flags</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Emo Flags]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Emo Flags</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Anger</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Anger]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Anger</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Antic</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Antic]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Antic</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Disgust</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Disgust]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Disgust</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Fear</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Fear]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Fear</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Joy</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Joy]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Joy</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Neg</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Neg]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Neg</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Pos</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Pos]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Pos</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Sadness</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Sadness]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Sadness</remote-alias>
+            <ordinal>15</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Surprise</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Surprise]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Surprise</remote-alias>
+            <ordinal>16</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Trust</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Trust]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Trust</remote-alias>
+            <ordinal>17</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Exp Valence</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Exp Valence]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Exp Valence</remote-alias>
+            <ordinal>18</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg GS Index</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg GS Index]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg GS Index</remote-alias>
+            <ordinal>19</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg GS Indicator</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg GS Indicator]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg GS Indicator</remote-alias>
+            <ordinal>20</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Avg Twitter Sent</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Avg Twitter Sent]</local-name>
+            <parent-name>[yearly_sent_metrics.csv]</parent-name>
+            <remote-alias>Avg Twitter Sent</remote-alias>
+            <ordinal>21</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='real' name='[Avg Anger]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Antic]' role='measure' type='quantitative' />
+      <column caption='Average Compound Sentiment' datatype='real' name='[Avg Comp Sent]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Disgust]' role='measure' type='quantitative' />
+      <column caption='Average Expanded Valence' datatype='real' name='[Avg Exp Valence]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Fear]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Foreign Words]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg GS Index]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg GS Indicator]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Joy]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Neg Sent]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Neg]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Pos Sent]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Pos]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Sadness]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Surprise]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Trust]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Twitter Sent]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Avg Word Count]' role='measure' type='quantitative' />
+      <column caption='Calculation1' datatype='real' name='[Calculation_1120481535021133825]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Avg Exp Valence] + 0.5' />
+      </column>
+      <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='yearly_sent_metrics.csv' datatype='table' name='[__tableau_internal_object_id__].[yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C]' role='measure' type='quantitative' />
+      <column-instance column='[Avg Exp Valence]' derivation='Sum' name='[diff:sum:Avg Exp Valence:qk]' pivot='key' type='quantitative'>
+        <table-calc diff-options='Relative' ordering-type='Rows' type='Difference'>
+          <address>
+            <value>-1</value>
+          </address>
+        </table-calc>
+      </column-instance>
+      <column-instance column='[Avg Foreign Words]' derivation='Median' name='[med:Avg Foreign Words:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg GS Indicator]' derivation='Median' name='[med:Avg GS Indicator:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Anger]' derivation='Sum' name='[sum:Avg Anger:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Antic]' derivation='Sum' name='[sum:Avg Antic:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Comp Sent]' derivation='Sum' name='[sum:Avg Comp Sent:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Disgust]' derivation='Sum' name='[sum:Avg Disgust:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Exp Valence]' derivation='Sum' name='[sum:Avg Exp Valence:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Fear]' derivation='Sum' name='[sum:Avg Fear:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Foreign Words]' derivation='Sum' name='[sum:Avg Foreign Words:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg GS Index]' derivation='Sum' name='[sum:Avg GS Index:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg GS Indicator]' derivation='Sum' name='[sum:Avg GS Indicator:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Joy]' derivation='Sum' name='[sum:Avg Joy:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Neg Sent]' derivation='Sum' name='[sum:Avg Neg Sent:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Neg]' derivation='Sum' name='[sum:Avg Neg:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Pos Sent]' derivation='Sum' name='[sum:Avg Pos Sent:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Pos]' derivation='Sum' name='[sum:Avg Pos:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Sadness]' derivation='Sum' name='[sum:Avg Sadness:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Surprise]' derivation='Sum' name='[sum:Avg Surprise:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Trust]' derivation='Sum' name='[sum:Avg Trust:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Twitter Sent]' derivation='Sum' name='[sum:Avg Twitter Sent:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Avg Word Count]' derivation='Sum' name='[sum:Avg Word Count:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Calculation_1120481535021133825]' derivation='Sum' name='[sum:Calculation_1120481535021133825:qk]' pivot='key' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[:Measure Names]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[med:Avg Foreign Words:qk]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Comp Sent:qk]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Foreign Words:qk]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Sadness:qk]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Twitter Sent:qk]&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Disgust:qk]&quot;</bucket>
+            </map>
+            <map to='#767676'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Neg:qk]&quot;</bucket>
+            </map>
+            <map to='#76b7b2'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Surprise:qk]&quot;</bucket>
+            </map>
+            <map to='#76b7b2'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Calculation_1120481535021133825:qk]&quot;</bucket>
+            </map>
+            <map to='#9c755f'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Trust:qk]&quot;</bucket>
+            </map>
+            <map to='#a9b5ae'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Pos:qk]&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[med:Avg GS Indicator:qk]&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg GS Index:qk]&quot;</bucket>
+            </map>
+            <map to='#bb7693'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Fear:qk]&quot;</bucket>
+            </map>
+            <map to='#c85200'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[diff:sum:Avg Exp Valence:qk]&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Anger:qk]&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Neg Sent:qk]&quot;</bucket>
+            </map>
+            <map to='#edc948'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Pos Sent:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Exp Valence:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg GS Indicator:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Word Count:qk]&quot;</bucket>
+            </map>
+            <map to='#ff9da7'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Antic:qk]&quot;</bucket>
+            </map>
+            <map to='#ffae34'>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Joy:qk]&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <field-sort-info field-sort-order-type='custom-order'>
+        <field-sort-custom-order field='F1' />
+        <field-sort-custom-order field='Year' />
+        <field-sort-custom-order field='Avg Word Count' />
+        <field-sort-custom-order field='Avg Foreign Words' />
+        <field-sort-custom-order field='Avg Comp Sent' />
+        <field-sort-custom-order field='Avg Pos Sent' />
+        <field-sort-custom-order field='Avg Neg Sent' />
+        <field-sort-custom-order field='Avg Emo Flags' />
+        <field-sort-custom-order field='Avg Anger' />
+        <field-sort-custom-order field='Avg Antic' />
+        <field-sort-custom-order field='Avg Disgust' />
+        <field-sort-custom-order field='Avg Fear' />
+        <field-sort-custom-order field='Avg Joy' />
+        <field-sort-custom-order field='Avg Neg' />
+        <field-sort-custom-order field='Avg Pos' />
+        <field-sort-custom-order field='Avg Sadness' />
+        <field-sort-custom-order field='Avg Surprise' />
+        <field-sort-custom-order field='Avg Trust' />
+        <field-sort-custom-order field='Avg Exp Valence' />
+        <field-sort-custom-order field='Calculation_1120481535021133825' />
+        <field-sort-custom-order field='Avg GS Index' />
+        <field-sort-custom-order field='Avg GS Indicator' />
+        <field-sort-custom-order field='Avg Twitter Sent' />
+      </field-sort-info>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='yearly_sent_metrics.csv' id='yearly_sent_metrics.csv_88DB1F4A92FE45C8938636B5319E8A1C'>
+            <properties context=''>
+              <relation connection='textscan.0ogf8f20hx6ijg17848e51n0hgox' name='yearly_sent_metrics.csv' table='[yearly_sent_metrics#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+                  <column datatype='integer' name='F1' ordinal='0' />
+                  <column datatype='integer' name='Year' ordinal='1' />
+                  <column datatype='real' name='Avg Word Count' ordinal='2' />
+                  <column datatype='real' name='Avg Foreign Words' ordinal='3' />
+                  <column datatype='real' name='Avg Comp Sent' ordinal='4' />
+                  <column datatype='real' name='Avg Pos Sent' ordinal='5' />
+                  <column datatype='real' name='Avg Neg Sent' ordinal='6' />
+                  <column datatype='real' name='Avg Emo Flags' ordinal='7' />
+                  <column datatype='real' name='Avg Anger' ordinal='8' />
+                  <column datatype='real' name='Avg Antic' ordinal='9' />
+                  <column datatype='real' name='Avg Disgust' ordinal='10' />
+                  <column datatype='real' name='Avg Fear' ordinal='11' />
+                  <column datatype='real' name='Avg Joy' ordinal='12' />
+                  <column datatype='real' name='Avg Neg' ordinal='13' />
+                  <column datatype='real' name='Avg Pos' ordinal='14' />
+                  <column datatype='real' name='Avg Sadness' ordinal='15' />
+                  <column datatype='real' name='Avg Surprise' ordinal='16' />
+                  <column datatype='real' name='Avg Trust' ordinal='17' />
+                  <column datatype='real' name='Avg Exp Valence' ordinal='18' />
+                  <column datatype='real' name='Avg GS Index' ordinal='19' />
+                  <column datatype='real' name='Avg GS Indicator' ordinal='20' />
+                  <column datatype='real' name='Avg Twitter Sent' ordinal='21' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <actions>
+    <action caption='Highlight 1 (generated)' name='[Action1_1758007263164BAF913A6FFAC8960182]'>
+      <activation auto-clear='true' type='on-select' />
+      <source type='sheet' worksheet='Sentiments by Year' />
+      <command command='tsc:brush'>
+        <param name='field-captions' value='Measure Names' />
+        <param name='target' value='Sentiments by Year' />
+      </command>
+    </action>
+  </actions>
+  <worksheets>
+    <worksheet name='Sentiments by Year'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Sentiments by Year</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='yearly_sent_metrics' name='federated.1yyrskj19u99zu0zoj43o18vwo2v' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1yyrskj19u99zu0zoj43o18vwo2v'>
+            <column datatype='real' name='[Avg Anger]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Antic]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Disgust]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Fear]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Joy]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Neg]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Pos]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Sadness]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Surprise]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Trust]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+            <column-instance column='[Year]' derivation='None' name='[none:Year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Anger]' derivation='Sum' name='[sum:Avg Anger:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Antic]' derivation='Sum' name='[sum:Avg Antic:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Disgust]' derivation='Sum' name='[sum:Avg Disgust:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Fear]' derivation='Sum' name='[sum:Avg Fear:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Joy]' derivation='Sum' name='[sum:Avg Joy:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Neg]' derivation='Sum' name='[sum:Avg Neg:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Pos]' derivation='Sum' name='[sum:Avg Pos:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Sadness]' derivation='Sum' name='[sum:Avg Sadness:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Surprise]' derivation='Sum' name='[sum:Avg Surprise:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Trust]' derivation='Sum' name='[sum:Avg Trust:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]'>
+            <groupfilter function='union' user:op='manual'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Anger:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Fear:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Antic:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Sadness:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Disgust:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Joy:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Neg:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Pos:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Surprise:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Trust:qk]&quot;' />
+            </groupfilter>
+          </filter>
+          <manual-sort column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Anger:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Fear:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Antic:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Sadness:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Disgust:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Joy:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Neg:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Pos:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Surprise:qk]&quot;</bucket>
+              <bucket>&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Trust:qk]&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <slices>
+            <column>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[Multiple Values]' scope='rows' value='Sentiment' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Line' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[Multiple Values]</rows>
+        <cols>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[none:Year:qk]</cols>
+      </table>
+      <simple-id uuid='{633FCBF7-947C-4978-BBA9-A79F217FD1A9}' />
+    </worksheet>
+    <worksheet name='Sheet 3'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Positive and Negative Sentiment with GS Indicator</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='yearly_sent_metrics' name='federated.1yyrskj19u99zu0zoj43o18vwo2v' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1yyrskj19u99zu0zoj43o18vwo2v'>
+            <column datatype='real' name='[Avg GS Indicator]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Neg Sent]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Avg Pos Sent]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+            <column-instance column='[Year]' derivation='None' name='[none:Year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg GS Indicator]' derivation='Sum' name='[sum:Avg GS Indicator:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Neg Sent]' derivation='Sum' name='[sum:Avg Neg Sent:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Pos Sent]' derivation='Sum' name='[sum:Avg Pos Sent:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]'>
+            <groupfilter function='union' user:op='manual'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Neg Sent:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Pos Sent:qk]&quot;' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg GS Indicator:qk]' field-type='quantitative' fold='true' scope='rows' type='space' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+          </pane>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[Multiple Values]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+          </pane>
+          <pane id='3' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg GS Indicator:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>([federated.1yyrskj19u99zu0zoj43o18vwo2v].[Multiple Values] + [federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg GS Indicator:qk])</rows>
+        <cols>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[none:Year:qk]</cols>
+      </table>
+      <simple-id uuid='{F81B9F14-FC8C-4BF4-AA31-C2925874D4D3}' />
+    </worksheet>
+    <worksheet name='Sheet 4'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontname='Tableau Medium'>Sentiment and Emotion Flagging Metric Comparison</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='yearly_sent_metrics' name='federated.1yyrskj19u99zu0zoj43o18vwo2v' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1yyrskj19u99zu0zoj43o18vwo2v'>
+            <column caption='Average Compound Sentiment' datatype='real' name='[Avg Comp Sent]' role='measure' type='quantitative' />
+            <column caption='Average Expanded Valence' datatype='real' name='[Avg Exp Valence]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+            <column-instance column='[Year]' derivation='None' name='[none:Year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Comp Sent]' derivation='Sum' name='[sum:Avg Comp Sent:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Exp Valence]' derivation='Sum' name='[sum:Avg Exp Valence:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Exp Valence:qk]' field-type='quantitative' fold='true' scope='rows' type='space' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='814' />
+                <format attr='maxwidth' value='814' />
+                <format attr='minheight' value='514' />
+                <format attr='maxheight' value='514' />
+                <format attr='aspect' value='0' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Comp Sent:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='814' />
+                <format attr='maxwidth' value='814' />
+                <format attr='minheight' value='514' />
+                <format attr='maxheight' value='514' />
+                <format attr='aspect' value='0' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='3' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Exp Valence:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='814' />
+                <format attr='maxwidth' value='814' />
+                <format attr='minheight' value='514' />
+                <format attr='maxheight' value='514' />
+                <format attr='aspect' value='0' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Comp Sent:qk] + [federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Exp Valence:qk])</rows>
+        <cols>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[none:Year:qk]</cols>
+      </table>
+      <simple-id uuid='{55AA3D9D-88CE-452A-9AC5-689FE4AEF45D}' />
+    </worksheet>
+    <worksheet name='Valance over time'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontname='Tableau Medium'>Expanded Valence by Year</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='yearly_sent_metrics' name='federated.1yyrskj19u99zu0zoj43o18vwo2v' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1yyrskj19u99zu0zoj43o18vwo2v'>
+            <column caption='Average Expanded Valence' datatype='real' name='[Avg Exp Valence]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+            <column-instance column='[Year]' derivation='None' name='[none:Year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Avg Exp Valence]' derivation='Sum' name='[sum:Avg Exp Valence:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[sum:Avg Exp Valence:qk]</rows>
+        <cols>[federated.1yyrskj19u99zu0zoj43o18vwo2v].[none:Year:qk]</cols>
+      </table>
+      <simple-id uuid='{884DA500-5C7D-4ED8-AC77-FCAD7A72CD8C}' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Dashboard 1'>
+      <style />
+      <size maxheight='800' maxwidth='1000' minheight='800' minwidth='1000' />
+      <zones>
+        <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone h='98000' id='7' param='horz' type-v2='layout-flow' w='98400' x='800' y='1000'>
+            <zone h='98000' id='5' type-v2='layout-basic' w='98400' x='800' y='1000'>
+              <zone h='98000' id='3' name='Sheet 4' w='98400' x='800' y='1000'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+        <zone fixed-size='58' h='7250' id='8' is-fixed='true' name='Sheet 4' pane-specification-id='2' param='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' type-v2='color' w='24400' x='57400' y='6875' />
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='700' minheight='700' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000' />
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{9F16BC69-0933-4215-BBFF-7E25E10A73D1}' />
+    </dashboard>
+  </dashboards>
+  <windows source-height='30'>
+    <window class='worksheet' name='Sentiments by Year'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card type='measures' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='1' param='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{63E03075-2508-4E2C-B10E-762DB0195F67}' />
+    </window>
+    <window class='worksheet' name='Valance over time'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{1A9A82B4-84D1-4E5B-93C0-79C7AB24E76B}' />
+    </window>
+    <window class='worksheet' name='Sheet 3'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card type='measures' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='2' param='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{14A7539B-E98A-479C-9742-4AB85F2CACF6}' />
+    </window>
+    <window class='worksheet' name='Sheet 4'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='2' param='[federated.1yyrskj19u99zu0zoj43o18vwo2v].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{CABA067B-4E83-4D18-9E7E-C8CB495A5038}' />
+    </window>
+    <window class='dashboard' maximized='true' name='Dashboard 1'>
+      <viewpoints>
+        <viewpoint name='Sheet 4'>
+          <zoom type='entire-view' />
+        </viewpoint>
+      </viewpoints>
+      <active id='8' />
+      <simple-id uuid='{8FF4C51A-C10A-4BCB-B5CD-BB780ED53613}' />
+    </window>
+  </windows>
+</workbook>
