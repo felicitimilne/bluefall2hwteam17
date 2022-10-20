@@ -50,6 +50,8 @@ df3[14187,2] <- 844.047
 # create time series object
 energy <- ts(df3[,2], start = 2019, frequency = 24) # frequency = 24 hours * 365.25 days in a year
 
+validation <- ts(validation[,2], start = 2021, frequency = 24)
+
 # autoplot
 autoplot(energy) +
   ggtitle("Energy Usage") +
@@ -73,6 +75,10 @@ Prof <- add_country_holidays(Prof, "US")
 Prof <- add_seasonality(Prof, name='monthly', period=30.5, fourier.order=6)
 Prof <- fit.prophet(Prof, prophet.data)
 
+prof
+
+checkresiduals(Prof)
+
 forecast.data <- make_future_dataframe(Prof, periods = 168, freq = 'hour')
 
 
@@ -83,8 +89,44 @@ forecast.data <- make_future_dataframe(Prof, periods = 168, freq = 'hour')
 Prophet.error <- validation - tail(predict(Prof, forecast.data)$yhat, 168)
 
 # Calculate prediction error statistics (MAE and MAPE)
-Prophet.MAE <- mean(abs(Prophet.error$mw))
-Prophet.MAPE <- mean(abs(Prophet.error$mw)/abs(validation$mw))*100
+Prophet.MAE <- mean(abs(Prophet.error))
+Prophet.MAPE <- mean(abs(Prophet.error)/abs(validation))*100
 
 Prophet.MAE
 Prophet.MAPE
+
+######################################################################
+
+#Neural Network
+
+set.seed(476)
+NN.Model <- nnetar(diff(energy, 24), p = 1, P = 2)
+
+
+checkresiduals(NN.Model)
+
+NN.Forecast <- forecast::forecast(NN.Model, h = 168)
+plot(NN.Forecast)
+
+
+
+
+Pass.Forecast <- rep(NA, 168)
+
+for(i in 1:168){
+  Pass.Forecast[i] <- energy[length(energy) - 168 + i] + NN.Forecast$mean[i]
+}
+
+Pass.Forecast <- ts(Pass.Forecast, start = 2021, frequency = 24)
+
+
+# Calculate prediction errors from forecast
+NN.error <- validation - Pass.Forecast
+
+# Calculate prediction error statistics (MAE and MAPE)
+NN.MAE <- mean(abs(NN.error))
+NN.MAPE <- mean(abs(NN.error)/abs(validation))*100
+
+NN.MAE
+
+NN.MAPE
