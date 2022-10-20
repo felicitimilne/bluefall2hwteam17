@@ -50,7 +50,7 @@ df3[14187,2] <- 844.047
 # create time series object
 energy <- ts(df3[,2], start = 2019, frequency = 24) # frequency = 24 hours * 365.25 days in a year
 
-validation <- ts(validation[,2], start = 2021, frequency = 24)
+validation <- ts(validation[,2], start = 2022, frequency = 24)
 
 # autoplot
 autoplot(energy) +
