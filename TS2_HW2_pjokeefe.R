@@ -181,8 +181,12 @@ NN.Forecast <- forecast::forecast(NN.Model, h = 168)
 
 Pass.Forecast <- rep(NA, 168)
 
-for(i in 1:168){
+for(i in 1:24){
   Pass.Forecast[i] <- energy[length(energy) - 24 + i] + NN.Forecast$mean[i]
+}
+
+for(i in 25:168){
+  Pass.Forecast[i] <- Pass.Forecast[length(Pass.Forecast) - 192 + i] + NN.Forecast$mean[i]
 }
 
 Pass.Forecast <- ts(Pass.Forecast, start = 2022, frequency = 24)
@@ -213,9 +217,14 @@ NN.Forecast.test <- forecast::forecast(NN.Model.test, h = 168)
 
 Pass.Forecast.test <- rep(NA, 168)
 
-for(i in 1:168){
-  Pass.Forecast.test[i] <- energy.test[length(energy.test) - 168 + i] + NN.Forecast.test$mean[i]
+for(i in 1:24){
+  Pass.Forecast.test[i] <- energy.test[length(energy.test) - 24 + i] + NN.Forecast.test$mean[i]
 }
+
+for(i in 25:168){
+  Pass.Forecast.test[i] <- Pass.Forecast.test[length(Pass.Forecast.test) - 192 + i] + NN.Forecast.test$mean[i]
+}
+
 
 Pass.Forecast.test <- ts(Pass.Forecast.test, start = 2022, frequency = 24)
 
