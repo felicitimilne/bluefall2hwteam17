@@ -47,6 +47,8 @@ df3$datetime_beginning_ept <- mdy_hm(df3$datetime_beginning_ept, tz = Sys.timezo
 
 validation$datetime_beginning_ept <- mdy_hm(validation$datetime_beginning_ept, tz = Sys.timezone())
 
+new_val$datetime_beginning_ept <- mdy_hm(new_val$datetime_beginning_ept, tz = Sys.timezone())
+
 
 test$datetime_beginning_ept <- mdy_hm(test$datetime_beginning_ept, tz = Sys.timezone())
 
@@ -94,6 +96,25 @@ MAPE=mean(abs(error)/abs(validation$mw))
 MAE
 MAPE
 
+#Forcasted vs Actuals Graph
+#make validation only datetime vector
+tseq_val_week <- seq.POSIXt(from = as.POSIXct("2022-09-30 00:00:00", tz = "EST"), length.out = 168, by = "hours")
+tseq_val_week <- c(tseq_val_week, tseq_val_week)
+tseq_val_week <- sort(tseq_val_week)
+
+
+#long dataset with actual/predicted for plotting later
+add_model_df_val <- data.frame(cbind(validation$mw, HW$mean))
+colnames(add_model_df_val) <- c("actual", "predicted")
+add_model_df_val <- add_model_df_val %>% pivot_longer(c(actual, predicted))
+
+
+#actual vs predicted data only over validation period
+ggplot(data = add_model_df_val, aes(x = tseq_val_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Additive HW Forecast for 9/30/22-10/06/22", color = "Data")
+
 #test
 HW.test <- hw(energy, seasonal = "additive", h = 168)
 
@@ -106,6 +127,29 @@ MAPE.test=mean(abs(error.test)/abs(test$mw))
 
 MAE.test
 MAPE.test
+
+
+#Forcasted vs Actuals Graph
+#make test only datetime vector
+tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-07 00:00:00", tz = "EST"), length.out = 168, by = "hours")
+tseq_test_week <- c(tseq_test_week, tseq_test_week)
+tseq_test_week <- sort(tseq_test_week)
+
+
+#long dataset with actual/predicted for plotting later
+add_model_df_test <- data.frame(cbind(test$mw, HW.test$mean))
+colnames(add_model_df_test) <- c("actual", "predicted")
+add_model_df_test <- add_model_df_test %>% pivot_longer(c(actual, predicted))
+
+
+#actual vs predicted data only over test period
+ggplot(data = add_model_df_test, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Additive HW Forecast for 10/07/22-10/14/22", color = "Data")
+
+
+
 
 
 ##################################################################
@@ -138,6 +182,20 @@ Prophet.MAPE <- mean(abs(Prophet.error)/abs(validation$mw))*100
 Prophet.MAE
 Prophet.MAPE
 
+#Forcasted vs Actuals Graph
+#long dataset with actual/predicted for plotting later
+proph_model_df_val <- data.frame(cbind(validation$mw, tail(predict(Prof, forecast.data)$yhat, 168)))
+colnames(proph_model_df_val) <- c("actual", "predicted")
+proph_model_df_val <- proph_model_df_val %>% pivot_longer(c(actual, predicted))
+
+
+#actual vs predicted data only over validation period
+ggplot(data = proph_model_df_val, aes(x = tseq_val_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Forecast for 9/30/22-10/06/22", color = "Data")
+
+
 
 ##Test
 
@@ -163,6 +221,21 @@ Prophet.MAPE.test <- mean(abs(Prophet.error)/abs(test$mw))*100
 
 Prophet.MAE.test
 Prophet.MAPE.test
+
+#Forcasted vs Actuals Graph
+#long dataset with actual/predicted for plotting later
+proph_model_df_test <- data.frame(cbind(test$mw, tail(predict(Prof.test, forecast.data.test)$yhat, 168)))
+colnames(proph_model_df_test) <- c("actual", "predicted")
+proph_model_df_test <- proph_model_df_test %>% pivot_longer(c(actual, predicted))
+
+
+#actual vs predicted data only over validation period
+ggplot(data = proph_model_df_test, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Forecast for 10/07/22-10/14/22", color = "Data")
+
+
 
 ######################################################################
 
@@ -205,6 +278,20 @@ NN.MAE
 
 NN.MAPE
 
+#Forcasted vs Actuals Graph
+#long dataset with actual/predicted for plotting later
+NN_model_df_val <- data.frame(cbind(validation_ts, Pass.Forecast))
+colnames(NN_model_df_val) <- c("actual", "predicted")
+NN_model_df_val <- NN_model_df_val %>% pivot_longer(c(actual, predicted))
+
+
+#actual vs predicted data only over validation period
+ggplot(data = NN_model_df_val, aes(x = tseq_val_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Neural Network Forecast for 9/30/22-10/06/22", color = "Data")
+
+
 
 ### Test
 NN.Model.test <- nnetar(diff(energy.test, 24), p = 1, P = 2)
@@ -241,6 +328,20 @@ NN.MAPE.test <- mean(abs(NN.error.test)/abs(test_ts))*100
 NN.MAE.test
 
 NN.MAPE.test
+
+#Forcasted vs Actuals Graph
+#long dataset with actual/predicted for plotting later
+NN_model_df_test <- data.frame(cbind(test_ts, Pass.Forecast.test))
+colnames(NN_model_df_test) <- c("actual", "predicted")
+NN_model_df_test <- NN_model_df_test %>% pivot_longer(c(actual, predicted))
+
+
+#actual vs predicted data only over validation period
+ggplot(data = NN_model_df_test, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Neural Network Forecast for 10/07/22-10/14/22", color = "Data")
+
 
 
 
