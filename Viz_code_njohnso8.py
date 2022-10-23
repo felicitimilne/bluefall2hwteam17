@@ -1,0 +1,355 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# Import Libraries
+
+# In[101]:
+
+
+# import libraries
+import pandas as pd
+import csv
+
+
+# Load Data
+# 
+
+# In[102]:
+
+
+# load data and create dataframe
+rawdata = pd.read_csv("NcstateSinglesStatReport.csv")
+
+indoor_outdoor = pd.read_csv("Indoors and Outdoors.csv")
+
+
+# Data Cleaning & Considerations
+
+# In[103]:
+
+
+# make clean dataset
+cleandata = rawdata
+
+# remove white space from player name
+cleandata['player'] = cleandata['player'].str.strip()
+
+# remove errors in rally length(those that do not match with the time duration
+##### team - how should we deal with this? 
+##### my idea is checking the distribution of rally lengths, checking all rally lengths above a certain (unlikely) number, then cross-check with point time duration and the actual footage on Cizr.
+
+# take care of instances where nc state players play against each other - are they counted separately/are they reflected in the data?
+# "coach secker: Count them for each of our players as normal. They are counting matches in a players record."
+##### team - how should we deal with this?
+
+
+# Adding Seasons to data
+
+# In[104]:
+
+
+# create seasons function
+
+# if month is 1,2,3,4,5,6 --> current season, take year value 
+# if month is 7,8,9,10,11,12 --> next season, year value + 1
+
+def find_season(date):
+    if int(date.split('/')[0]) < 7:
+        return int(date.split('/')[2])
+    else:
+        return int(date.split('/')[2]) + 1
+
+# adding season column to data
+
+cleandata.insert(loc = 3,
+          column = 'season',
+          value = '')
+
+cleandata['season'] = cleandata['date'].apply(find_season) 
+
+
+# Create Lists
+
+# In[105]:
+
+
+# create list of player names
+players = cleandata['player'].unique()
+
+
+# List of Functions for all columns needed for output data frame
+
+# In[106]:
+
+
+def get_player_name(df, match_id):
+    return df[(df['matchId'] == match_id)]['player'].iloc[0]
+
+def get_opp_name(df, match_id):
+    return df[(df['matchId'] == match_id)]['opp'].iloc[0]
+
+def get_season(df, match_id):
+    return df[(df['matchId'] == match_id)]['season'].iloc[0]
+
+def get_date(df, match_id):
+    return df[(df['matchId'] == match_id)]['date'].iloc[0]
+
+################function incomplete (match result, indoor/outdoor)#######################
+def get_match_result(df, match_id):
+    return df[(df['matchId'] == match_id)]['season'].iloc[0]
+################################function incomplete#######################
+
+def indoors(match_id):
+    if indoor_outdoor[(indoor_outdoor['matchId'] == match_id)]['Indoors'].iloc[0] == "Indoors":
+        return True
+    else:
+        return False
+
+def total_points_won(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 0)])
+
+def winners(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 0) & (df['outcome'] == 'Winner')])
+
+def forehand_winners(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 0) & (df['outcome'] == 'Winner') & (df['shotType'] == 'Forehand')])
+
+def backhand_winners(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 0) & (df['outcome'] == 'Winner') & (df['shotType'] == 'Backhand')])
+
+def errors_forced(df, match_id): 
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 0) & (df['outcome'] == 'ForcedError')])
+
+def unforced_errors(df, match_id): 
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'UnforcedError')])
+
+def unforced_errors_net(df, match_id): # added
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'UnforcedError') & (df['errorType'] == 'Net')])
+
+def unforced_errors_long(df, match_id): # added
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'UnforcedError') & (df['errorType'] == 'Long')])
+
+def unforced_errors_forehand(df, match_id):     #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'UnforcedError') & (df['shotType'] == 'Forehand')])
+
+def unforced_errors_backhand(df, match_id):     #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'UnforcedError') & (df['shotType'] == 'Backhand')])
+
+def forced_errors_by_opponent(df, match_id): # added
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'ForcedError')])
+
+def forced_error_by_opponent_net(df, match_id): # added
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'ForcedError') & (df['errorType'] == 'Net')])
+
+def forced_error_by_opponent_long(df, match_id): # added
+    return len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'ForcedError') & (df['errorType'] == 'Long')])
+
+def break_points_total(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['breakPoint'] == True) & (df['server'] == 1)])
+
+def break_points_won(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['breakPoint'] == True) & (df['server'] == 1) & (df['pointWonBy'] == 0)])
+
+def aces(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['outcome'] == 'Ace') & (df['server'] == 0)])
+
+def double_faults(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['outcome'] == 'Fault') & (df['server'] == 0)])
+
+def double_faults_error_net(df, match_id): #added
+    return len(df[(df['matchId'] == match_id) & (df['outcome'] == 'Fault') & (df['server'] == 0) & (df['errorType'] == 'Net')])
+
+def double_faults_error_long(df, match_id): #added
+    return len(df[(df['matchId'] == match_id) & (df['outcome'] == 'Fault') & (df['server'] == 0) & (df['errorType'] == 'Long')])
+
+def total_serves(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['server'] == 0)])
+
+def first_serves_in(df, match_id):
+    return len(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['firstServeIn'] == True)])
+
+def first_serve_in_percentage(df, match_id):
+    return first_serves_in(df, match_id) / total_serves(df, match_id)
+
+def first_serves_won(df, match_id):     #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['firstServeIn'] == True) & (df['pointWonBy'] == 0)])
+
+def first_serves_won_percentage(df, match_id):   #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['firstServeIn'] == True) & (df['pointWonBy'] == 0)]) / first_serves_in(df, match_id)
+
+def total_second_serves(df, match_id):
+    return total_serves(df, match_id) - first_serves_in(df, match_id)
+
+def second_serves_in(df, match_id):
+    return total_second_serves(df, match_id) - len(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['firstServeIn'] == False) & (df['outcome'] == 'Fault')])
+
+def second_serves_in_percentage(df, match_id):
+    return second_serves_in(df, match_id) / total_second_serves(df, match_id)
+
+def second_serves_won(df, match_id):    #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['firstServeIn'] == False) & (df['pointWonBy'] == 0)])
+
+def second_serves_won_percentage(df, match_id): #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['firstServeIn'] == False) & (df['pointWonBy'] == 0)]) / total_second_serves(df, match_id)
+
+def first_serve_returns(df, match_id):  #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['returner'] == 0) & (df['firstServeIn'] == True) & (df['returnInPlay'] == True)])
+
+def first_serve_returns_percentage(df, match_id): #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['returner'] == 0) & (df['firstServeIn'] == True) & (df['returnInPlay'] == True)]) / len(df[(df['matchId'] == match_id) & (df['returner'] == 0) & (df['firstServeIn'] == True)])
+
+def second_serve_returns(df, match_id):     #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['returner'] == 0) & (df['firstServeIn'] == False) & (df['outcome'] != "Fault") & (df['returnInPlay'] == True)])
+
+def second_serve_returns_percentage(df, match_id): #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['returner'] == 0) & (df['firstServeIn'] == False) & (df['outcome'] != "Fault") & (df['returnInPlay'] == True)]) / len(df[(df['matchId'] == match_id) & (df['returner'] == 0) & (df['firstServeIn'] == False) & (df['outcome'] != "Fault")])
+
+def short_rallies_won(df, match_id):    #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['rallyLength'] < 5) & (df['pointWonBy'] == 0)])
+
+def short_rallies_won_percentage(df, match_id):  #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['rallyLength'] < 5) & (df['pointWonBy'] == 0)]) / len(df[(df['matchId'] == match_id) & (df['rallyLength'] < 5)])
+
+def medium_rallies_won(df, match_id):   #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['rallyLength'] >= 5) & (df['rallyLength'] < 9) & (df['pointWonBy'] == 0)])
+
+def medium_rallies_won_percentage(df, match_id):  #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['rallyLength'] >= 5) & (df['rallyLength'] < 9) & (df['pointWonBy'] == 0)]) / len(df[(df['matchId'] == match_id) & (df['rallyLength'] >= 5) & (df['rallyLength'] < 9)])
+
+def long_rallies_won(df, match_id):     #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['rallyLength'] > 8) & (df['pointWonBy'] == 0)])
+
+def long_rallies_won_percentage(df, match_id):  #added by Josh
+    return len(df[(df['matchId'] == match_id) & (df['rallyLength'] > 8) & (df['pointWonBy'] == 0)]) / len(df[(df['matchId'] == match_id) & (df['rallyLength'] > 8)])
+
+def service_games_total(df, match_id):
+    return len(pd.unique(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['tiebreaker'] == False)]['game']))
+
+def service_games_won(df, match_id):
+    return len(pd.unique(df[(df['matchId'] == match_id) & (df['server'] == 0) & (df['tiebreaker'] == False) & (df['gameWonBy'] == 0)]['game']))
+
+def service_games_won_percentage(df, match_id):
+    return service_games_won(df, match_id) / service_games_total(df, match_id)
+
+# aggressive error margin 1 formula = (Winner + Forced Errors)-unforced errors
+def aggressive_error_margin_1(df, match_id):
+    return (len(df[((df['matchId'] == match_id) & (df['pointWonBy'] == 0)) & ((df['outcome'] == 'Winner') | (df['outcome'] == 'ForcedError'))])) - (len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & (df['outcome'] == 'UnforcedError')]))
+
+# aggressive error margin 2 formula = (Winner + Forced Errors + Aces) - (unforced errors + double faults)
+def aggressive_error_margin_2(df, match_id):  #added by Josh
+    return (len(df[((df['matchId'] == match_id) & (df['pointWonBy'] == 0)) & ((df['outcome'] == 'Ace') | (df['outcome'] == 'Winner') | (df['outcome'] == 'ForcedError'))])) - (len(df[(df['matchId'] == match_id) & (df['pointWonBy'] == 1) & ((df['outcome'] == 'Fault') | df['outcome'] == 'UnforcedError')]))
+
+# First serve performance rating metric formula = (First Serve %)x(first serve win %/100)
+def first_serve_performance(df, match_id):
+    return first_serve_in_percentage(df, match_id) * first_serves_won(df, match_id)
+
+
+# Create data frame using all the functions
+# 
+# 
+# Desired output:
+# 
+# df1: 1 row per player
+# 
+# player name
+# 17+ metrics
+# 
+# df2: 1 row per match (long form, multiple rows per player)
+# 
+# matchid
+# player, opponent name 
+# season
+# match result: win/lose
+# indoor/outdoor
+# 17+ metrics
+
+# In[107]:
+
+
+# match stats data frame
+
+unique_match_ids = list(cleandata['matchId'].unique())
+
+df = cleandata
+
+completed_frame = {'match_id' : unique_match_ids,
+                    'player': [get_player_name(df, x) for x in unique_match_ids],
+                    'opponent': [get_opp_name(df, x) for x in unique_match_ids],
+                    'season' : [get_season(df, x) for x in unique_match_ids],
+                    'match_result' : [0]*len(unique_match_ids),       #needs update
+                    'indoors' : [indoors(x) for x in unique_match_ids],
+                    'total_points_won' : [total_points_won(df, x) for x in unique_match_ids],
+                    'winners' : [winners(df, x) for x in unique_match_ids],
+                    'forehand_winner' : [forehand_winners(df, x) for x in unique_match_ids],
+                    'backhand_winner' : [backhand_winners(df, x) for x in unique_match_ids],
+                    'errors_forced' : [errors_forced(df, x) for x in unique_match_ids],
+                    'unforced_errors' : [unforced_errors(df, x) for x in unique_match_ids],
+                    'unforced_errors_net' : [unforced_errors_net(df, x) for x in unique_match_ids],
+                    'unforced_errors_long' : [unforced_errors_long(df, x) for x in unique_match_ids],
+                    'unforced_errors_forehand' : [unforced_errors_forehand(df, x) for x in unique_match_ids],
+                    'unforced_errors_backhand' : [unforced_errors_backhand(df, x) for x in unique_match_ids],
+                    'forced_errors_by_opponent' : [forced_errors_by_opponent(df, x) for x in unique_match_ids],
+                    'forced_errors_by_opponent_net' : [forced_error_by_opponent_net(df, x) for x in unique_match_ids],
+                    'forced_errors_by_opponent_long' : [forced_error_by_opponent_long(df, x) for x in unique_match_ids],
+                    'break_points_total' : [break_points_total(df, x) for x in unique_match_ids],
+                    'break_points_won' : [break_points_won(df, x) for x in unique_match_ids],
+                    'aces' : [aces(df, x) for x in unique_match_ids],
+                    'double_faults' : [double_faults(df, x) for x in unique_match_ids],
+                    'double_faults_error_net' : [double_faults_error_net(df, x) for x in unique_match_ids],
+                    'double_faults_error_long' : [double_faults_error_long(df, x) for x in unique_match_ids],
+                    'total_serves' : [total_serves(df, x) for x in unique_match_ids],
+                    'first_serves_in' : [first_serves_in(df, x) for x in unique_match_ids],
+                    'first_serve_in_percentage' : [first_serve_in_percentage(df, x) for x in unique_match_ids],
+                    'first_serves_won' : [first_serves_won(df, x) for x in unique_match_ids],
+                    'first_serves_won_percentage' : [first_serves_won_percentage(df, x) for x in unique_match_ids],
+                    'total_second_serves' : [total_second_serves(df, x) for x in unique_match_ids],
+                    'second_serves_in' : [second_serves_in(df, x) for x in unique_match_ids],
+                    'second_serves_in_percentage' : [second_serves_in_percentage(df, x) for x in unique_match_ids],
+                    'second_serves_won' : [second_serves_won(df, x) for x in unique_match_ids],
+                    'second_serves_won_percentage' : [second_serves_won_percentage(df, x) for x in unique_match_ids],
+                    'first_serve_returns' : [first_serve_returns(df, x) for x in unique_match_ids],
+                    'first_serve_returns_percentage' : [first_serve_returns_percentage(df, x) for x in unique_match_ids],
+                    'second_serve_returns' : [second_serve_returns(df, x) for x in unique_match_ids],
+                    'second_serve_returns_percentage' : [second_serve_returns_percentage(df, x) for x in unique_match_ids],
+                    'short_rallies_won' : [short_rallies_won(df, x) for x in unique_match_ids],
+                    'short_rallies_won_percentage' : [short_rallies_won_percentage(df, x) for x in unique_match_ids],
+                    'medium_rallies_won' : [medium_rallies_won(df, x) for x in unique_match_ids],
+                    'medium_rallies_won_percentage' : [medium_rallies_won_percentage(df, x) for x in unique_match_ids],
+                    'long_rallies_won' : [long_rallies_won(df, x) for x in unique_match_ids],
+                    'long_rallies_won_percentage' : [long_rallies_won_percentage(df, x) for x in unique_match_ids],
+                    'service_games_total' : [service_games_total(df, x) for x in unique_match_ids],
+                    'service_games_won' : [service_games_won(df, x) for x in unique_match_ids],
+                    'service_games_won_percentage' : [service_games_won_percentage(df, x) for x in unique_match_ids],
+                    'aggressive_error_margin_1' : [aggressive_error_margin_1(df, x) for x in unique_match_ids],
+                    'aggressive_error_margin_2' : [aggressive_error_margin_2(df, x) for x in unique_match_ids],
+                    'first_serve_performance' : [first_serve_performance(df, x) for x in unique_match_ids]}
+
+
+match_stats = pd.DataFrame(data = completed_frame)
+
+match_stats.round(2).to_csv('match_stats.csv')
+
+
+# In[108]:
+
+
+# player career stats dataframe
+
+player_career = match_stats.loc[:, ~match_stats.columns.isin(['match_id', 'opponent', 'season', 'match_result', 'location'])].groupby('player').mean()
+
+player_career.round(2).to_csv('career_stats.csv')
+
+
+# In[109]:
+
+
+# check data types
+
+cleandata.dtypes
+
+
+# In[110]:
+
+
+cleandata.head()
+
