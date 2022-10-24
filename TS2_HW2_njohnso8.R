@@ -1,7 +1,6 @@
 # code for time series 2 homework 1 
 
 # libraries
-library(tidyverse)
 library(dplyr)
 library(ggfortify)
 library(lubridate)
@@ -24,77 +23,43 @@ df <- read.csv("https://raw.githubusercontent.com/felicitimilne/bluefall2hwteam1
 head(df)
 
 df2 <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test1.csv")
-train <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test2.csv")
-
-train <- data.frame(rbind(df,df2, train))
-
-validation <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test3.csv")
-
-<<<<<<< HEAD
 df3 <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test2.csv")
-head(df3)
 
-
-df4 <- rbind(df,df2, df3)
+train <- data.frame(rbind(df,df2, df3))
 
 validation <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test3.csv")
 
-
-test <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test4.csv")
-#get rid of useless variables
-df4 <- df[,c(1,6)]
-=======
 
 test <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test4.csv")
 #get rid of useless variables
 train <- train[,c(1,6)]
->>>>>>> d94cfe70212eb967d4ad19833045620f452e5e60
 
 validation <- validation[,c(1,6)]
 
 test <- test[,c(1,6)]
 
-<<<<<<< HEAD
-
-new_val <- rbind(df4, validation)
-
-#Change variable to a date time object
-df4$datetime_beginning_ept <- mdy_hm(df4$datetime_beginning_ept, tz = Sys.timezone())
-=======
-retrain <- data.frame(rbind(train, validation))
-
 #Change variable to a date time object
 train$datetime_beginning_ept <- mdy_hm(train$datetime_beginning_ept, tz = Sys.timezone())
->>>>>>> d94cfe70212eb967d4ad19833045620f452e5e60
 
 validation$datetime_beginning_ept <- mdy_hm(validation$datetime_beginning_ept, tz = Sys.timezone())
-
-retrain$datetime_beginning_ept <- mdy_hm(retrain$datetime_beginning_ept, tz = Sys.timezone())
-
 
 test$datetime_beginning_ept <- mdy_hm(test$datetime_beginning_ept, tz = Sys.timezone())
 
 
 #Impute the average of previous and next observation to fix the zeros for DLS
-<<<<<<< HEAD
-df4[c(5280:5290),]
-df4[5283,2] <- 904.2965
-
-df4[c(14180:14190),]
-df4[14187,2] <- 844.047
-
-# create time series object
-energy <- ts(df4[,2], start = 2019, frequency = 24) # frequency = 24 hours * 365.25 days in a year
-=======
 train[c(5280:5290),]
 train[5283,2] <- 904.2965
 
 train[c(14180:14190),]
 train[14187,2] <- 844.047
 
+retrain <- data.frame(rbind(train, validation))
+
+retrain$datetime_beginning_ept <- mdy_hm(retrain$datetime_beginning_ept, tz = Sys.timezone())
+
+
 # create time series object
 energy <- ts(train[,2], start = 2019, frequency = 24) # frequency = 24 hours * 365.25 days in a year
->>>>>>> d94cfe70212eb967d4ad19833045620f452e5e60
 
 energy.test <- ts(retrain[,2], start = 2019, frequency = 24)
 
@@ -115,74 +80,14 @@ begin_aug_2022_time <- as.POSIXct("2022-08-01 00:00:00", tz = "EST")
 begin_aug_2022 <- match(begin_aug_2022_time, train$datetime_beginning_ept)
 tseq_2022_aug <- seq.POSIXt(from = begin_aug_2022_time, length.out = nrow(train) - begin_aug_2022 + 169, by = "hours")
 
-<<<<<<< HEAD
-#decomposition plot
-decomp_stl <- stl(energy, s.window = 7)
-plot(decomp_stl)
-autoplot(decomp_stl)
-
-#subseries plot that plots the averages of the seasons
-ggsubseriesplot(energy)
-
-
-
-#Create the holt winter's model
-HW <- hw(energy, seasonal = "multiplicative", h = 168)
-#summary(HW)
-
-
-# Calculate prediction errors from forecast
-error=validation$mw-HW$mean
-
-# Calculate prediction error statistics (MAE and MAPE)
-MAE=mean(abs(error))
-MAPE=mean(abs(error)/abs(validation$mw))
-
-MAE
-MAPE
-
-#Forcasted vs Actuals Graph
-=======
->>>>>>> d94cfe70212eb967d4ad19833045620f452e5e60
 #make validation only datetime vector
+tseq_val_week_all <- c(tseq_val_week, tseq_val_week, tseq_val_week)
 tseq_val_week <- c(tseq_val_week, tseq_val_week)
 tseq_val_week <- sort(tseq_val_week)
 
-<<<<<<< HEAD
-
-#long dataset with actual/predicted for plotting later
-add_model_df_val <- data.frame(cbind(validation$mw, HW$mean))
-colnames(add_model_df_val) <- c("actual", "predicted")
-add_model_df_val <- add_model_df_val %>% pivot_longer(c(actual, predicted))
-
-
-#actual vs predicted data only over validation period
-ggplot(data = add_model_df_val, aes(x = tseq_val_week, y = value, color = factor(name))) + 
-  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
-  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Additive HW Forecast for 9/30/22-10/06/22", color = "Data")
-
-#test
-HW.test <- hw(energy, seasonal = "multiplicative", h = 168)
-
-# Calculate prediction errors from forecast
-error.test=test$mw-HW.test$mean
-
-# Calculate prediction error statistics (MAE and MAPE)
-MAE.test=mean(abs(error.test))
-MAPE.test=mean(abs(error.test)/abs(test$mw))
-
-MAE.test
-MAPE.test
-
-
-#Forcasted vs Actuals Graph
-#make test only datetime vector
-tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-07 00:00:00", tz = "EST"), length.out = 168, by = "hours")
-=======
 tseq_2022_aug_test <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(train) - begin_aug_2022 + 337, by = "hours")
 tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-14 00:00:00", tz = "EST"), length.out = 168, by = "hours")
->>>>>>> d94cfe70212eb967d4ad19833045620f452e5e60
+tseq_test_week_all <- c(tseq_test_week, tseq_test_week, tseq_test_week)
 tseq_test_week <- c(tseq_test_week, tseq_test_week)
 tseq_test_week <- sort(tseq_test_week)
 
@@ -201,11 +106,7 @@ colnames(dummy_df_aug_test) <- c("index", "forecast")
 
 # Prophet
 
-<<<<<<< HEAD
-prophet.data <- data.frame(ds = df4$datetime_beginning_ept, y = df4$mw)
-=======
 prophet.data <- data.frame(ds = train$datetime_beginning_ept, y = train$mw)
->>>>>>> d94cfe70212eb967d4ad19833045620f452e5e60
 
 Prof <- prophet()
 Prof <- add_country_holidays(Prof, "US")
@@ -218,8 +119,8 @@ forecast.data <- make_future_dataframe(Prof, periods = 168, freq = 'hour')
 
 proph_pred <- tail(predict(Prof, forecast.data)$yhat, 168)
 proph_model_df <- data.frame(cbind(validation$mw, proph_pred))
-colnames(proph_model_df) <- c("actual", "predicted")
-proph_model_df <- proph_model_df %>% pivot_longer(c(actual, predicted))
+colnames(proph_model_df) <- c("actual", "predicted_proph")
+proph_model_df <- proph_model_df %>% pivot_longer(c(actual, predicted_proph))
 
 whole_mw_with_forecast_proph <- c(train$mw, proph_pred)
 mw_with_forecast_proph <- c(train$mw[begin_2022:nrow(train)], proph_pred)
@@ -265,8 +166,8 @@ forecast.data.test <- make_future_dataframe(Prof.test, periods = 168, freq = 'ho
 proph_pred_test <- tail(predict(Prof.test, forecast.data.test)$yhat, 168)
 
 proph_model_test_df <- data.frame(cbind(test$mw, proph_pred_test))
-colnames(proph_model_test_df) <- c("actual", "predicted")
-proph_model_test_df <- proph_model_test_df %>% pivot_longer(c(actual, predicted))
+colnames(proph_model_test_df) <- c("actual", "predicted_proph")
+proph_model_test_df <- proph_model_test_df %>% pivot_longer(c(actual, predicted_proph))
 
 aug_test_mw_with_forecast_proph <- c(retrain$mw[begin_aug_2022:nrow(retrain)], proph_pred_test)
 
@@ -285,8 +186,8 @@ ggplot(data = proph_model_test_df, aes(x = tseq_test_week, y = value, color = fa
 Prophet.error.test <- test$mw - proph_pred_test
 
 # Calculate prediction error statistics (MAE and MAPE)
-Prophet.MAE.test <- mean(abs(Prophet.error))
-Prophet.MAPE.test <- mean(abs(Prophet.error)/abs(test$mw))*100
+Prophet.MAE.test <- mean(abs(Prophet.error.test))
+Prophet.MAPE.test <- mean(abs(Prophet.error.test)/abs(test$mw))*100
 
 Prophet.MAE.test
 Prophet.MAPE.test
@@ -300,13 +201,9 @@ Prophet.MAPE.test
 set.seed(476)
 NN.Model <- nnetar(diff(energy, 24), p = 1, P = 2)
 
-
 checkresiduals(NN.Model)
 
 NN.Forecast <- forecast::forecast(NN.Model, h = 168)
-
-
-
 
 Pass.Forecast <- rep(NA, 168)
 
@@ -318,13 +215,32 @@ for(i in 25:168){
   Pass.Forecast[i] <- Pass.Forecast[length(Pass.Forecast) - 192 + i] + NN.Forecast$mean[i]
 }
 
-Pass.Forecast <- ts(Pass.Forecast, start = 2022, frequency = 24)
+nn_pred <- Pass.Forecast
+nn_model_df <- data.frame(cbind(validation$mw, nn_pred))
+colnames(nn_model_df) <- c("actual", "predicted_nn")
+nn_model_df <- nn_model_df %>% pivot_longer(c(actual, predicted_nn))
 
-validation_ts <- ts(validation[,2], start = 2022, frequency = 24)
+whole_mw_with_forecast_nn <- c(train$mw, proph_pred)
+mw_with_forecast_nn <- c(train$mw[begin_2022:nrow(train)], nn_pred)
+aug_mw_with_forecast_nn <- c(train$mw[begin_aug_2022:nrow(train)], nn_pred)
+
+ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_nn, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Neural Network Model Forecast for 10/7/22-10/13/22", color = "Data")
+
+ggplot(data = nn_model_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs NN Model Forecast for 10/7/22-10/13/22", color = "Data")
+
+#Pass.Forecast <- ts(Pass.Forecast, start = 2022, frequency = 24)
+
+#validation_ts <- ts(validation[,2], start = 2022, frequency = 24)
 
 
 # Calculate prediction errors from forecast
-NN.error <- validation_ts - Pass.Forecast
+NN.error <- validation_ts - nn_pred
 
 # Calculate prediction error statistics (MAE and MAPE)
 NN.MAE <- mean(abs(NN.error))
@@ -334,29 +250,10 @@ NN.MAE
 
 NN.MAPE
 
-#Forcasted vs Actuals Graph
-#long dataset with actual/predicted for plotting later
-NN_model_df_val <- data.frame(cbind(validation_ts, Pass.Forecast))
-colnames(NN_model_df_val) <- c("actual", "predicted")
-NN_model_df_val <- NN_model_df_val %>% pivot_longer(c(actual, predicted))
-
-
-#actual vs predicted data only over validation period
-ggplot(data = NN_model_df_val, aes(x = tseq_val_week, y = value, color = factor(name))) + 
-  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
-  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Neural Network Forecast for 9/30/22-10/06/22", color = "Data")
-
-
-
 ### Test
 NN.Model.test <- nnetar(diff(energy.test, 24), p = 1, P = 2)
 
 NN.Forecast.test <- forecast::forecast(NN.Model.test, h = 168)
-
-
-
-
 
 Pass.Forecast.test <- rep(NA, 168)
 
@@ -369,36 +266,126 @@ for(i in 25:168){
 }
 
 
-Pass.Forecast.test <- ts(Pass.Forecast.test, start = 2022, frequency = 24)
+#Pass.Forecast.test <- ts(Pass.Forecast.test, start = 2022, frequency = 24)
 
-test_ts <- ts(test[,2], start = 2022, frequency = 24)
+#test_ts <- ts(test[,2], start = 2022, frequency = 24)]
+
+nn_pred_test <- Pass.Forecast.test
+
+nn_model_test_df <- data.frame(cbind(test$mw, nn_pred_test))
+colnames(nn_model_test_df) <- c("actual", "predicted_nn")
+nn_model_test_df <- nn_model_test_df %>% pivot_longer(c(actual, predicted_nn))
+
+aug_test_mw_with_forecast_nn <- c(retrain$mw[begin_aug_2022:nrow(retrain)], nn_pred_test)
+
+ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_nn, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Neural Network Model Test Forecast for 10/14/22-10/20/22", color = "Data")
+
+ggplot(data = nn_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs NN Model Test Forecast for 10/14/22-10/20/22", color = "Data")
+
+#combined plots
+
+#validation
+nn_model_df_temp <- nn_model_df %>% mutate(count = sort(rep(seq(1, 168), 2)))
+proph_df_only <-  proph_model_df %>% filter(name == "predicted_proph") %>% mutate(count = seq(1, 168))
+model_df <- data.frame(rbind(nn_model_df_temp, proph_df_only)) %>% arrange(name)
+
+ggplot(data = model_df, aes(x = tseq_val_week_all, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f"), labels = c("Actual", "Predicted NN", "Predicted Proph")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Model vs NN Model Forecast for 10/7/22-10/13/22", color = "Data")
+
+#test
+nn_model_test_df_temp <- nn_model_test_df %>% mutate(count = sort(rep(seq(1, 168), 2)))
+proph_test_df_only <-  proph_model_test_df %>% filter(name == "predicted_proph") %>% mutate(count = seq(1, 168))
+model_test_df <- data.frame(rbind(nn_model_test_df_temp, proph_test_df_only)) %>% arrange(name)
+
+ggplot(data = model_test_df, aes(x = tseq_test_week_all, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f"), labels = c("Actual", "Predicted NN", "Predicted Proph")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Model vs NN Model Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 
 # Calculate prediction errors from forecast
-NN.error.test <- test_ts - Pass.Forecast.test
+NN.error.test <- test$mw - nn_pred_test
 
 # Calculate prediction error statistics (MAE and MAPE)
 NN.MAE.test <- mean(abs(NN.error.test))
-NN.MAPE.test <- mean(abs(NN.error.test)/abs(test_ts))*100
+NN.MAPE.test <- mean(abs(NN.error.test)/abs(test$mw))*100
 
 NN.MAE.test
 
 NN.MAPE.test
 
-#Forcasted vs Actuals Graph
-#long dataset with actual/predicted for plotting later
-NN_model_df_test <- data.frame(cbind(test_ts, Pass.Forecast.test))
-colnames(NN_model_df_test) <- c("actual", "predicted")
-NN_model_df_test <- NN_model_df_test %>% pivot_longer(c(actual, predicted))
+HW_mult_test <- hw(energy.test, seasonal = "multiplicative", h = 168)
 
+#long dataset of actual/predicted for plotting later
+mult_model_test_df <- data.frame(cbind(test$mw, HW_mult_test$mean))
+colnames(mult_model_test_df) <- c("actual", "predicted")
+mult_model_test_df <- mult_model_test_df %>% pivot_longer(c(actual, predicted))
 
-#actual vs predicted data only over validation period
-ggplot(data = NN_model_df_test, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+#append forecasted values to original data, only going to graph from 8/1/2022
+aug_test_mw_with_forecast_mult <- c(retrain$mw[begin_aug_2022:nrow(retrain)], HW_mult_test$mean)
+
+#time plots with colored forecast
+
+#subset from 8/1/2022
+ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_mult, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/14/22-10/20/22", color = "Data")
+#actual vs predicted data only for test period
+ggplot(data = mult_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+        scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+        scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+        labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/14/22-10/20/22", color = "Data")
+
+#calculate the MAE and MAPE for the test set
+hwforecastmult_test.error = test$mw - HW_mult_test$mean
+
+hwforecastmult_test.MAE = mean(abs(hwforecastmult_test.error))
+hwforecastmult_test.MAE
+
+hwforecastmult_test.MAPE=mean(abs(hwforecastmult_test.error)/test$mw) * 100
+hwforecastmult_test.MAPE
+
+model1222_test <- Arima(energy.test, order = c(1,0,2), seasonal = c(2,1,2))
+#forecast
+model1222forecast_test <- forecast::forecast(model1222_test, h = 168)
+
+#long dataset of actual/predicted for plotting later
+arima_model_1_test_df <- data.frame(cbind(test$mw, model1222forecast_test$mean))
+colnames(arima_model_1_test_df) <- c("actual", "predicted")
+arima_model_1_test_df <- arima_model_1_test_df %>% pivot_longer(c(actual, predicted))
+
+#append forecasted values to original data, only going to graph from 8/1/2022
+aug_test_mw_with_forecast_arima_1 <- c(retrain$mw[begin_aug_2022:nrow(retrain)], model1222forecast_test$mean)
+
+#time plots with colored forecasts
+
+#subset from 8/1/2022
+ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_arima_1, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 10/14/22-10/20/22", color = "Data")
+#actual vs predicted data only for test period
+ggplot(data = arima_model_1_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
-  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Neural Network Forecast for 10/07/22-10/14/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 
+ARIMA.error.test <- test$mw - model1222forecast_test$mean
+ARIMA.mae.test <- mean(abs(ARIMA.error.test))
+ARIMA.mape.test <- mean(abs(ARIMA.error.test) / abs(test$mw)) * 100
+
+ARIMA.mae.test
+ARIMA.mape.test
 
 
 
