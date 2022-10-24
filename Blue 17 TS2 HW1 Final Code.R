@@ -377,7 +377,7 @@ energy_model_train_val <- ts(train_val[,2], start = 2019 + 212/365, frequency = 
 
 #create new datetime vector for test set timeframe
 tseq_2022_aug_test <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(data) - begin_aug_2022 + 337, by = "hours")
-tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-09-30 00:00:00", tz = "EST"), length.out = 168, by = "hours")
+tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-14 00:00:00", tz = "EST"), length.out = 168, by = "hours")
 tseq_test_week <- c(tseq_test_week, tseq_test_week)
 tseq_test_week <- sort(tseq_test_week)
 
