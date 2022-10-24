@@ -1,6 +1,7 @@
 # code for time series 2 homework 1 
 
 # libraries
+library(tidyverse)
 library(dplyr)
 library(ggfortify)
 library(lubridate)
@@ -25,25 +26,28 @@ head(df)
 df2 <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test1.csv")
 head(df2)
 
-
-df3 <- rbind(df,df2)
-
-validation <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test2.csv")
+df3 <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test2.csv")
+head(df3)
 
 
-test <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test3.csv")
+df4 <- rbind(df,df2, df3)
+
+validation <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test3.csv")
+
+
+test <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test4.csv")
 #get rid of useless variables
-df3 <- df[,c(1,6)]
+df4 <- df[,c(1,6)]
 
 validation <- validation[,c(1,6)]
 
 test <- test[,c(1,6)]
 
 
-new_val <- rbind(df3, validation)
+new_val <- rbind(df4, validation)
 
 #Change variable to a date time object
-df3$datetime_beginning_ept <- mdy_hm(df3$datetime_beginning_ept, tz = Sys.timezone())
+df4$datetime_beginning_ept <- mdy_hm(df4$datetime_beginning_ept, tz = Sys.timezone())
 
 validation$datetime_beginning_ept <- mdy_hm(validation$datetime_beginning_ept, tz = Sys.timezone())
 
@@ -54,14 +58,14 @@ test$datetime_beginning_ept <- mdy_hm(test$datetime_beginning_ept, tz = Sys.time
 
 
 #Impute the average of previous and next observation to fix the zeros for DLS
-df3[c(5280:5290),]
-df3[5283,2] <- 904.2965
+df4[c(5280:5290),]
+df4[5283,2] <- 904.2965
 
-df3[c(14180:14190),]
-df3[14187,2] <- 844.047
+df4[c(14180:14190),]
+df4[14187,2] <- 844.047
 
 # create time series object
-energy <- ts(df3[,2], start = 2019, frequency = 24) # frequency = 24 hours * 365.25 days in a year
+energy <- ts(df4[,2], start = 2019, frequency = 24) # frequency = 24 hours * 365.25 days in a year
 
 energy.test <- ts(new_val[,2], start = 2019, frequency = 24)
 
@@ -82,7 +86,7 @@ ggsubseriesplot(energy)
 
 
 #Create the holt winter's model
-HW <- hw(energy, seasonal = "additive", h = 168)
+HW <- hw(energy, seasonal = "multiplicative", h = 168)
 #summary(HW)
 
 
@@ -116,7 +120,7 @@ ggplot(data = add_model_df_val, aes(x = tseq_val_week, y = value, color = factor
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Additive HW Forecast for 9/30/22-10/06/22", color = "Data")
 
 #test
-HW.test <- hw(energy, seasonal = "additive", h = 168)
+HW.test <- hw(energy, seasonal = "multiplicative", h = 168)
 
 # Calculate prediction errors from forecast
 error.test=test$mw-HW.test$mean
@@ -156,7 +160,7 @@ ggplot(data = add_model_df_test, aes(x = tseq_test_week, y = value, color = fact
 
 # Prophet
 
-prophet.data <- data.frame(ds = df3$datetime_beginning_ept, y = df3$mw)
+prophet.data <- data.frame(ds = df4$datetime_beginning_ept, y = df4$mw)
 
 Prof <- prophet()
 Prof <- add_country_holidays(Prof, "US")
