@@ -100,7 +100,7 @@ MAE
 MAPE
 
 #test
-HW.test <- hw(energy.test, seasonal = "multiplicative", h = 168)
+HW.test <- hw(energy.val, seasonal = "multiplicative", h = 168)
 
 # Calculate prediction errors from forecast
 error.test=test$mw-HW.test$mean
