@@ -3800,6 +3800,62 @@
       </table>
       <simple-id uuid='{F5C92D4F-7F29-4FB6-8C47-AE541AE60DE1}' />
     </worksheet>
+    <worksheet name='Sheet 3'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='radar_tennis_test' name='federated.0b05b2t1k3bymv173uuws1gqz6im' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0b05b2t1k3bymv173uuws1gqz6im'>
+            <column-instance column='[player (match_stats.csv)]' derivation='None' name='[none:player (match_stats.csv):nk]' pivot='key' type='nominal' />
+            <column caption='Player (Match Stats.Csv)' datatype='string' name='[player (match_stats.csv)]' role='dimension' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0b05b2t1k3bymv173uuws1gqz6im].[none:player (match_stats.csv):nk]'>
+            <groupfilter function='member' level='[none:player (match_stats.csv):nk]' member='&quot;Abigail Rencheli&quot;' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.0b05b2t1k3bymv173uuws1gqz6im].[none:player (match_stats.csv):nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='width' value='238' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='display' field='[federated.0b05b2t1k3bymv173uuws1gqz6im].[none:player (match_stats.csv):nk]' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.0b05b2t1k3bymv173uuws1gqz6im].[none:player (match_stats.csv):nk]' />
+            </encodings>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='wrap' value='auto' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{18AF0949-01B1-43B8-A2E3-CF50CD1CB6B6}' />
+    </worksheet>
   </worksheets>
   <windows saved-dpi-scale-factor='1.25' source-height='89'>
     <window class='worksheet' maximized='true' name='Radar Chart'>
@@ -3877,6 +3933,41 @@
         </highlight>
       </viewpoint>
       <simple-id uuid='{1E7E1B56-E545-4C1B-B5A3-A02237FA53CC}' />
+    </window>
+    <window class='worksheet' name='Sheet 3'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card param='[federated.0b05b2t1k3bymv173uuws1gqz6im].[none:player (match_stats.csv):nk]' type='filter' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0b05b2t1k3bymv173uuws1gqz6im].[none:player (match_stats.csv):nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{308FDF79-3139-4448-B88D-F7C22A334A28}' />
     </window>
   </windows>
   <thumbnails>
@@ -4202,6 +4293,41 @@
       QgA2QqRA5hECsBEiBTKPEICgqhECsBEiBTKPEICNECmQeUwXxIwMn2dkYh6AiWuXOXfuU5ZS
       +S1wTSDYetYtgEI2ycTULM2tLci3Bl0VDIW+7nZSidSWOShYPyIFMs+/AFOX5Q6D9AtoAAAA
       AElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='25' name='Sheet 3' width='192'>
+      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
+      AAAAAElFTkSuQmCC
     </thumbnail>
   </thumbnails>
   <external>
