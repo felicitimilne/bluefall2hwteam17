@@ -129,11 +129,13 @@ aug_mw_with_forecast_proph <- c(train$mw[begin_aug_2022:nrow(train)], proph_pred
 ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_proph, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) + 
   labs(x = "Time", y = "Energy (megawatts)", title = "Prophet Model Forecast for 10/7/22-10/13/22", color = "Data")
 
 ggplot(data = proph_model_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Forecast for 10/7/22-10/13/22", color = "Data")
 
 
@@ -173,7 +175,8 @@ aug_test_mw_with_forecast_proph <- c(retrain$mw[begin_aug_2022:nrow(retrain)], p
 
 ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_proph, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
-  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) +
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Prophet Model Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 ggplot(data = proph_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
@@ -227,11 +230,13 @@ aug_mw_with_forecast_nn <- c(train$mw[begin_aug_2022:nrow(train)], nn_pred)
 ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_nn, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Neural Network Model Forecast for 10/7/22-10/13/22", color = "Data")
 
 ggplot(data = nn_model_df, aes(x = tseq_val_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs NN Model Forecast for 10/7/22-10/13/22", color = "Data")
 
 #Pass.Forecast <- ts(Pass.Forecast, start = 2022, frequency = 24)
@@ -240,11 +245,11 @@ ggplot(data = nn_model_df, aes(x = tseq_val_week, y = value, color = factor(name
 
 
 # Calculate prediction errors from forecast
-NN.error <- validation_ts - nn_pred
+NN.error <- validation$mw - nn_pred
 
 # Calculate prediction error statistics (MAE and MAPE)
 NN.MAE <- mean(abs(NN.error))
-NN.MAPE <- mean(abs(NN.error)/abs(validation_ts))*100
+NN.MAPE <- mean(abs(NN.error)/abs(validation$mw))*100
 
 NN.MAE
 
@@ -281,11 +286,13 @@ aug_test_mw_with_forecast_nn <- c(retrain$mw[begin_aug_2022:nrow(retrain)], nn_p
 ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_nn, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Neural Network Model Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 ggplot(data = nn_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs NN Model Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 #combined plots
@@ -298,6 +305,7 @@ model_df <- data.frame(rbind(nn_model_df_temp, proph_df_only)) %>% arrange(name)
 ggplot(data = model_df, aes(x = tseq_val_week_all, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f"), labels = c("Actual", "Predicted NN", "Predicted Proph")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5, size = 12)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Model vs NN Model Forecast for 10/7/22-10/13/22", color = "Data")
 
 #test
@@ -308,6 +316,7 @@ model_test_df <- data.frame(rbind(nn_model_test_df_temp, proph_test_df_only)) %>
 ggplot(data = model_test_df, aes(x = tseq_test_week_all, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f"), labels = c("Actual", "Predicted NN", "Predicted Proph")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5, size = 12)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Prophet Model vs NN Model Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 
@@ -338,11 +347,13 @@ aug_test_mw_with_forecast_mult <- c(retrain$mw[begin_aug_2022:nrow(retrain)], HW
 ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_mult, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/14/22-10/20/22", color = "Data")
 #actual vs predicted data only for test period
 ggplot(data = mult_model_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
         scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
         scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+        theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
         labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 #calculate the MAE and MAPE for the test set
@@ -377,6 +388,7 @@ ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_wit
 ggplot(data = arima_model_1_test_df, aes(x = tseq_test_week, y = value, color = factor(name))) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 10/14/22-10/20/22", color = "Data")
 
 
@@ -386,7 +398,3 @@ ARIMA.mape.test <- mean(abs(ARIMA.error.test) / abs(test$mw)) * 100
 
 ARIMA.mae.test
 ARIMA.mape.test
-
-
-
-

@@ -182,7 +182,7 @@ arima_1_pacf <- ggPacf(model1222$residuals) + labs(x = "Lag", y = "Partial Autoc
 
 #show white noise histogram
 arima_1_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = model1222$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for ARIMA(1,0,2)(2,1,2)[24]")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(1,0,2)(2,1,2)[24]")
 
 grid.arrange(arima_1_resid_plot, arima_1_wn_hist, arima_1_acf, arima_1_pacf, nrow = 2, ncol = 2)
 
@@ -248,7 +248,7 @@ arima_2_pacf <- ggPacf(model1323$residuals) + labs(x = "Lag", y = "Partial Autoc
 
 #show white noise histogram
 arima_2_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = model1323$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for ARIMA(1,0,3)(2,1,3)[24]")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(1,0,3)(2,1,3)[24]")
 
 grid.arrange(arima_2_resid_plot, arima_2_wn_hist, arima_2_acf, arima_2_pacf, nrow = 2, ncol = 2)
 
@@ -316,7 +316,7 @@ arima_3_pacf <- ggPacf(automodel$residuals) + labs(x = "Lag", y = "Partial Autoc
 
 #show white noise histogram
 arima_3_wn_hist <- ggplot(data = whole_dummy_df[1:27576,], aes(x = automodel$residuals)) + geom_histogram(aes(y = ..density..), fill = "#648fff") + 
-  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "Residual Histogram for ARIMA(0,0,2)(0,1,2)[24]")
+  geom_density(color = "#ffb000") + labs(x = "Residuals", y = "Density", title = "White Noise Histogram for ARIMA(0,0,2)(0,1,2)[24]")
 
 grid.arrange(arima_3_resid_plot, arima_3_wn_hist, arima_3_acf, arima_3_pacf, nrow = 2, ncol = 2)
 
@@ -377,7 +377,7 @@ energy_model_train_val <- ts(train_val[,2], start = 2019 + 212/365, frequency = 
 
 #create new datetime vector for test set timeframe
 tseq_2022_aug_test <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(data) - begin_aug_2022 + 337, by = "hours")
-tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-14 00:00:00", tz = "EST"), length.out = 168, by = "hours")
+tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-09-30 00:00:00", tz = "EST"), length.out = 168, by = "hours")
 tseq_test_week <- c(tseq_test_week, tseq_test_week)
 tseq_test_week <- sort(tseq_test_week)
 
