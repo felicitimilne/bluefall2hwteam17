@@ -278,7 +278,8 @@ NN.MAPE.test
 
 
 
-#Averaging models
+############Averaging models
+#Validation
 For.Avg <- (HW$mean + 
               model1222forecast$mean)/2
 
@@ -289,3 +290,17 @@ Avg.MAPE <- mean(abs(Avg.error)/abs(validation$mw))*100
 
 Avg.MAE
 Avg.MAPE
+
+
+#Test
+For.Avg.test <- (HW.test$mean + 
+              model1222forecast_test$mean)/2
+
+Avg.error.test <- validation$mw - For.Avg.test
+
+Avg.MAE.test <- mean(abs(Avg.error.test))
+Avg.MAPE.test <- mean(abs(Avg.error.test)/abs(test$mw))*100
+
+Avg.MAE.test
+Avg.MAPE.test
+
