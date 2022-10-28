@@ -442,8 +442,8 @@ arima_test_mape
 
 ############Averaging models
 #Validation
-For.Avg <- (HW_mult$mean + 
-              model1222forecast$mean)/2
+# For.Avg <- (HW_mult$mean + 
+#               model1222forecast$mean)/2
 
 combined_df = data.frame(cbind(HW_mult$mean, model1222forecast$mean, 
                                proph_pred, nn_pred, validation$mw))
@@ -830,7 +830,7 @@ ggplot(data = best_model_df_test, aes(x = tseq_test_week_all, y = value, color =
 
 ####
 
-final_test <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test4.csv")
+final_test <- read.csv("https://github.com/felicitimilne/bluefall2hwteam17/raw/main/hrl_load_metered%20-%20test5.csv")
 final_test <- final_test[,c(1, 6)]
 final_test$datetime_beginning_ept <- mdy_hm(final_test$datetime_beginning_ept, tz = Sys.timezone())
 final <- data.frame(rbind(train, validation, test, final_test))
@@ -867,13 +867,15 @@ write_csv(final_df, "/Users/noahjohnson/Downloads/bluefall2hwteam17/Blue 17 TS2 
 
 
 #Second place model
+HW_mult_final <- hw(energy.final, "multiplicative", h = 192)
+
 aug_final_mw_with_forecast_mult <- c(final$mw[(begin_aug_2022 - 1):nrow(final)], HW_mult_final$mean)
 
 ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_final_mw_with_forecast_mult, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
-  labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/21/22-11/3/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/27/22-11/3/22", color = "Data")
 
 NN.Model.final <- nnetar(diff(energy.final, 24), p = 1, P = 2)
 
@@ -919,5 +921,3 @@ ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_fina
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Final Selected Model Test Forecast for 10/27/22-11/3/22", color = "Data")
-
-
