@@ -775,6 +775,19 @@ wt_model4_mape
 
 #highest mae and mape
 
+wt_model_df_temp_test <- wt_model_df1_test %>% mutate(count = sort(rep(seq(1, 168), 2)))
+wt_model2_only_test <-  wt_model_df2_test %>% filter(name == "predicted_wt2") %>% mutate(count = seq(1, 168))
+wt_model3_only_test <-  wt_model_df3_test %>% filter(name == "predicted_wt3") %>% mutate(count = seq(1, 168))
+wt_model4_only_test <-  wt_model_df4_test %>% filter(name == "predicted_wt4") %>% mutate(count = seq(1, 168))
+wt_model_df_test <- data.frame(rbind(wt_model_df_temp_test, wt_model2_only_test, wt_model3_only_test, wt_model4_only_test)) %>% arrange(name)
+
+ggplot(data = wt_model_df_test, aes(x = tseq_test_week_all_wt, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f", "#000000", "#777777"), labels = c("Actual", "Predicted 0.5/0.5", "Predicted 0.4/0.6", "Predicted 0.6/0.4", "Predicted 0.3/0.7")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5, size = 12)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Top Weighted Average Models Test Forecast for 10/14/22-10/20/22", color = "Data")
+
+
 ####
 
 final <- data.frame(rbind(train, test, validation))
