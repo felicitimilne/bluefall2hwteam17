@@ -56,7 +56,7 @@ train[14187,2] <- 844.047
 
 retrain <- data.frame(rbind(train, validation))
 
-retrain$datetime_beginning_ept <- mdy_hm(retrain$datetime_beginning_ept, tz = Sys.timezone())
+#retrain$datetime_beginning_ept <- mdy_hm(retrain$datetime_beginning_ept, tz = Sys.timezone())
 
 
 # create time series object
@@ -83,12 +83,17 @@ tseq_2022_aug <- seq.POSIXt(from = begin_aug_2022_time, length.out = nrow(train)
 
 #make validation only datetime vector
 tseq_val_week_all <- c(tseq_val_week, tseq_val_week, tseq_val_week)
+tseq_val_week_all_wt <- c(tseq_val_week, tseq_val_week, tseq_val_week, tseq_val_week, tseq_val_week)
+tseq_val_week_all_final <- c(tseq_val_week, tseq_val_week, tseq_val_week, tseq_val_week, tseq_val_week, tseq_val_week)
+
 tseq_val_week <- c(tseq_val_week, tseq_val_week)
 tseq_val_week <- sort(tseq_val_week)
 
 tseq_2022_aug_test <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(train) - begin_aug_2022 + 337, by = "hours")
 tseq_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-14 00:00:00", tz = "EST"), length.out = 168, by = "hours")
 tseq_test_week_all <- c(tseq_test_week, tseq_test_week, tseq_test_week)
+tseq_test_week_all_wt <- c(tseq_test_week, tseq_test_week, tseq_test_week, tseq_test_week, tseq_test_week)
+tseq_test_week_all_final <- c(tseq_test_week, tseq_test_week, tseq_test_week, tseq_test_week, tseq_test_week, tseq_test_week)
 tseq_test_week <- c(tseq_test_week, tseq_test_week)
 tseq_test_week <- sort(tseq_test_week)
 
@@ -102,6 +107,7 @@ colnames(whole_dummy_df) <- c("index", "forecast")
 colnames(dummy_df) <- c("index", "forecast")
 colnames(dummy_df_aug) <- c("index", "forecast")
 colnames(dummy_df_aug_test) <- c("index", "forecast")
+
 
 ##################################################################
 
@@ -278,11 +284,12 @@ for(i in 25:168){
 
 nn_pred_test <- Pass.Forecast.test
 
+aug_test_mw_with_forecast_nn <- c(retrain$mw[begin_aug_2022:nrow(retrain)], nn_pred_test)
+
 nn_model_test_df <- data.frame(cbind(test$mw, nn_pred_test))
 colnames(nn_model_test_df) <- c("actual", "predicted_nn")
 nn_model_test_df <- nn_model_test_df %>% pivot_longer(c(actual, predicted_nn))
 
-aug_test_mw_with_forecast_nn <- c(retrain$mw[begin_aug_2022:nrow(retrain)], nn_pred_test)
 
 ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_test_mw_with_forecast_nn, color = factor(forecast), group = 1)) + 
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
@@ -333,12 +340,20 @@ NN.MAE.test
 NN.MAPE.test
 
 HW_mult <- hw(energy, seasonal = "multiplicative", h = 168)
+
+mult_model_df <- data.frame(cbind(validation$mw, HW_mult$mean))
+colnames(mult_model_df) <- c("actual", "predicted_hw")
+mult_model_df <- mult_model_df %>% pivot_longer(c(actual, predicted_hw))
+
+#append forecasted values to original data, only going to graph from 8/1/2022
+aug_mw_with_forecast_mult <- c(train$mw[begin_aug_2022:nrow(train)], HW_mult$mean)
+
 HW_mult_test <- hw(energy.test, seasonal = "multiplicative", h = 168)
 
 #long dataset of actual/predicted for plotting later
 mult_model_test_df <- data.frame(cbind(test$mw, HW_mult_test$mean))
-colnames(mult_model_test_df) <- c("actual", "predicted")
-mult_model_test_df <- mult_model_test_df %>% pivot_longer(c(actual, predicted))
+colnames(mult_model_test_df) <- c("actual", "predicted_hw")
+mult_model_test_df <- mult_model_test_df %>% pivot_longer(c(actual, predicted_hw))
 
 #append forecasted values to original data, only going to graph from 8/1/2022
 aug_test_mw_with_forecast_mult <- c(retrain$mw[begin_aug_2022:nrow(retrain)], HW_mult_test$mean)
@@ -371,6 +386,12 @@ model1222 <- Arima(energy, order = c(1,0,2), seasonal = c(2,1,2))
 #forecast
 model1222forecast <- forecast::forecast(model1222, h = 168)
 
+arima_model_1_df <- data.frame(cbind(validation$mw, model1222forecast$mean))
+colnames(arima_model_1_df) <- c("actual", "predicted_arima")
+arima_model_1_df <- arima_model_1_df %>% pivot_longer(c(actual, predicted_arima))
+
+#append forecasted values to original data, only going to graph from 8/1/2022
+aug_mw_with_forecast_arima_1 <- c(train$mw[begin_aug_2022:nrow(train)], model1222forecast_test$mean)
 
 model1222_test <- Arima(energy.test, order = c(1,0,2), seasonal = c(2,1,2))
 #forecast
@@ -378,8 +399,8 @@ model1222forecast_test <- forecast::forecast(model1222_test, h = 168)
 
 #long dataset of actual/predicted for plotting later
 arima_model_1_test_df <- data.frame(cbind(test$mw, model1222forecast_test$mean))
-colnames(arima_model_1_test_df) <- c("actual", "predicted")
-arima_model_1_test_df <- arima_model_1_test_df %>% pivot_longer(c(actual, predicted))
+colnames(arima_model_1_test_df) <- c("actual", "predicted_arima")
+arima_model_1_test_df <- arima_model_1_test_df %>% pivot_longer(c(actual, predicted_arima))
 
 #append forecasted values to original data, only going to graph from 8/1/2022
 aug_test_mw_with_forecast_arima_1 <- c(retrain$mw[begin_aug_2022:nrow(retrain)], model1222forecast_test$mean)
@@ -421,23 +442,46 @@ for (i in 1:4) {
 }
 
 mape_df <- data.frame()
+mae_df <- data.frame()
 
 for (x in 6:length(colnames(combined_df))) {
-  temp_error <- combined_df[x] - combined_df[5]
-  temp_ape <- abs(temp_error) / combined_df[5]
+  temp_error <- combined_df[x] - combined_df$Actual
+  temp_ae <- abs(temp_error)
+  temp_ape <- abs(temp_error) / combined_df$Actual
   if (x == 6) {
     mape_df <- temp_ape
+    mae_df <- temp_ae
   }
   else {
     mape_df <- cbind(mape_df, temp_ape)
+    mae_df <- cbind(mae_df, temp_ae)
   }
 }
 
-mape_list <- (colMeans(mape_df, na.rm = TRUE))
+mape_list <- colMeans(mape_df, na.rm = TRUE)
 mape_list <- mape_list * 100
 min(mape_list)
 order(mape_list)
+mape_list[28] #0.5 HW / 0.5 NN
+mape_list[27] #0.4 HW / 0.6 NN
+mape_list[29] #0.6 HW / 0.4 NN
+mape_list[26] #0.3 HW / 0.7 NN
+####cutoff
+mape_list[30]
+mape_list[25]
 
+mae_list <-  colMeans(mae_df, na.rm = TRUE)
+min(mae_list)
+order(mae_list)
+mae_list[27] #0.4 / 0.6
+mae_list[28] #0.5 / 0.5
+mae_list[26] #0.6 / 0.4
+mae_list[29] #0.3 / 0.7
+####cutoff
+mae_list[25]
+mae_list[30]
+
+#0.5/0.5
 wt_forecast1 <- 0.5 * HW_mult$mean + 0.5 * nn_pred
 
 wt_model_df1 <- data.frame(cbind(validation$mw, wt_forecast1))
@@ -458,6 +502,7 @@ ggplot(data = wt_model_df1, aes(x = tseq_val_week, y = value, color = factor(nam
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs 0.5 HW / 0.5 NN Weighted Avg Model Forecast for 10/7/22-10/13/22", color = "Data")
 
+#0.4/0.6
 wt_forecast2 <- 0.4 * HW_mult$mean + 0.6 * nn_pred
 
 wt_model_df2 <- data.frame(cbind(validation$mw, wt_forecast2))
@@ -478,6 +523,7 @@ ggplot(data = wt_model_df2, aes(x = tseq_val_week, y = value, color = factor(nam
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs 0.4 HW / 0.6 NN Weighted Avg Model Forecast for 10/7/22-10/13/22", color = "Data")
 
+#0.6/0.4
 wt_forecast3 <- 0.6 * HW_mult$mean + 0.4 * nn_pred
 
 wt_model_df3 <- data.frame(cbind(validation$mw, wt_forecast3))
@@ -498,7 +544,55 @@ ggplot(data = wt_model_df3, aes(x = tseq_val_week, y = value, color = factor(nam
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs 0.6 HW / 0.4 NN Weighted Avg Model Forecast for 10/7/22-10/13/22", color = "Data")
 
-#Tried three model weighted average
+#0.3/0.7
+wt_forecast4 <- 0.3 * HW_mult$mean + 0.7 * nn_pred
+
+wt_model_df4 <- data.frame(cbind(validation$mw, wt_forecast4))
+colnames(wt_model_df4) <- c("actual", "predicted_wt4")
+wt_model_df4 <- wt_model_df4 %>% pivot_longer(c(actual, predicted_wt4))
+
+aug_mw_with_forecast_wt4 <- c(train$mw[begin_aug_2022:nrow(train)], wt_forecast4)
+
+ggplot(data = dummy_df_aug, aes(x = tseq_2022_aug, y = aug_mw_with_forecast_wt4, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "0.3 HW / 0.7 NN Weighted Avg Model Forecast for 10/7/22-10/13/22", color = "Data")
+
+ggplot(data = wt_model_df4, aes(x = tseq_val_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs 0.3 HW / 0.7 NN Weighted Avg Model Forecast for 10/7/22-10/13/22", color = "Data")
+
+wt_model_df_temp <- wt_model_df1 %>% mutate(count = sort(rep(seq(1, 168), 2)))
+wt_model2_only <-  wt_model_df2 %>% filter(name == "predicted_wt2") %>% mutate(count = seq(1, 168))
+wt_model3_only <-  wt_model_df3 %>% filter(name == "predicted_wt3") %>% mutate(count = seq(1, 168))
+wt_model4_only <-  wt_model_df4 %>% filter(name == "predicted_wt4") %>% mutate(count = seq(1, 168))
+wt_model_df <- data.frame(rbind(wt_model_df_temp, wt_model2_only, wt_model3_only, wt_model4_only)) %>% arrange(name)
+
+ggplot(data = wt_model_df, aes(x = tseq_val_week_all_wt, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f", "#000000", "#777777"), labels = c("Actual", "Predicted 0.5/0.5", "Predicted 0.4/0.6", "Predicted 0.6/0.4", "Predicted 0.3/0.7")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5, size = 12)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs Top Weighted Average Models Forecast for 10/7/22-10/13/22", color = "Data")
+
+final_model_df_temp <- mult_model_df %>% mutate(count = sort(rep(seq(1, 168), 2)))
+arima_model_only <- arima_model_1_df %>% filter(name == "predicted_arima") %>% mutate(count = seq(1, 168))
+proph_model_only <- proph_model_df %>% filter(name == "predicted_proph") %>% mutate(count = seq(1, 168))
+nn_model_only <- nn_model_df %>% filter(name == "predicted_nn") %>% mutate(count = seq(1, 168))
+wt_model_only <- wt_model_df1 %>% filter(name == "predicted_wt1") %>% mutate(count = seq(1, 168))
+final_model_df <- data.frame(rbind(final_model_df_temp, arima_model_only, proph_model_only, nn_model_only, wt_model_only)) %>%
+  arrange(name)
+
+ggplot(data = final_model_df, aes(x = tseq_val_week_all_final, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000", "#dc267f", "#000000", "#777777", "#f9bfd2"), labels = c("Actual", "Predicted ARIMA", "Predicted HW", "Predicted Prophet", "Predicted NN", "Predicted 0.5 HW / 0.5 NN")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5, size = 12)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs All Models Forecast for 10/7/22-10/13/22", color = "Data")
+
+
+#Tried three model weighted average: best combination was still two models
 three_model_df <- data.frame()
 for (i in 1:10) {
   arima1 <- 0.5 * (i / 10) * HW_mult$mean + 0.5 * (i / 10) * nn_pred + (1 - (i / 10)) * model1222forecast$mean
@@ -559,16 +653,9 @@ mape_list_three <- (colMeans(mape_df_three, na.rm = TRUE))
 mape_list_three <- mape_list_three * 100
 min(mape_list_three)
 
-Avg.error <- validation$mw - For.Avg
-
-Avg.MAE <- mean(abs(Avg.error))
-Avg.MAPE <- mean(abs(Avg.error)/abs(validation$mw))*100
-
-Avg.MAE
-Avg.MAPE
-
-
 #Test
+
+#0.5/0.5
 wt_forecast1_test <- 0.5 * HW_mult_test$mean + 
                    0.5 * nn_pred_test
 
@@ -596,6 +683,9 @@ wt_model1_mape <- mean(wt_model1_error / test$mw)
 wt_model1_mae
 wt_model1_mape
 
+#higher mape, lower mape
+
+#0.4/0.6
 wt_forecast2_test <- 0.4 * HW_mult_test$mean + 
   0.6 * nn_pred_test
 
@@ -625,6 +715,7 @@ wt_model2_mape
 
 #lower mae, higher mape...
 
+#0.6/0.4
 wt_forecast3_test <- 0.6 * HW_mult_test$mean + 
   0.4 * nn_pred_test
 
@@ -652,4 +743,104 @@ wt_model3_mape <- mean(wt_model3_error / test$mw)
 wt_model3_mae
 wt_model3_mape
 
+#higher mae and mape
+
+#0.3/0.7
+wt_forecast4_test <- 0.3 * HW_mult_test$mean + 
+  0.7 * nn_pred_test
+
+wt_model_df4_test <- data.frame(cbind(test$mw, wt_forecast4_test))
+colnames(wt_model_df4_test) <- c("actual", "predicted_wt4")
+wt_model_df4_test <- wt_model_df4_test %>% pivot_longer(c(actual, predicted_wt4))
+
+aug_mw_with_forecast_wt4_test <- c(retrain$mw[begin_aug_2022:nrow(retrain)], wt_forecast4_test)
+
+ggplot(data = dummy_df_aug_test, aes(x = tseq_2022_aug_test, y = aug_mw_with_forecast_wt4_test, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "0.3 HW / 0.7 NN Weighted Avg Model Test Forecast for 10/14/22-10/20/22", color = "Data")
+
+ggplot(data = wt_model_df4_test, aes(x = tseq_test_week, y = value, color = factor(name))) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Actual", "Predicted")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Actual vs 0.3 HW / 0.7 NN Weighted Avg Model Test Forecast for 10/14/22-10/20/22", color = "Data")
+
+wt_model4_error <- abs(wt_forecast4_test - test$mw)
+wt_model4_mae <- mean(wt_model4_error) 
+wt_model4_mape <- mean(wt_model4_error / test$mw)
+wt_model4_mae
+wt_model4_mape
+
 #highest mae and mape
+
+####
+
+final <- data.frame(rbind(train, test, validation))
+
+energy.final <- ts(final[,2], start = 2019, frequency = 24)
+
+tseq_2022_final_aug_test <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(final) - begin_aug_2022 + 338, by = "hours")
+tseq_final_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-21 00:00:00", tz = "EST"), length.out = 336, by = "hours")
+
+dummy_df_aug_final <- data.frame(cbind(seq(1:length(tseq_2022_final_aug_test)), c(rep(FALSE, (length(tseq_2022_final_aug_test) - 336)), rep(TRUE, 336))))
+colnames(dummy_df_aug_final) <- c("index", "forecast")
+
+HW_mult_final <- hw(energy.final, seasonal = "multiplicative", h = 336)
+
+aug_final_mw_with_forecast_mult <- c(final$mw[(begin_aug_2022 - 1):nrow(final)], HW_mult_final$mean)
+
+ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_final_mw_with_forecast_mult, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Multiplicative HW Test Forecast for 10/21/22-11/3/22", color = "Data")
+
+NN.Model.final <- nnetar(diff(energy.final, 24), p = 1, P = 2)
+
+NN.Forecast.final <- forecast::forecast(NN.Model.final, h = 336)
+
+Pass.Forecast.final <- rep(NA, 336)
+
+for(i in 1:24){
+  Pass.Forecast.final[i] <- energy.final[length(energy.final) - 24 + i] + NN.Forecast.final$mean[i]
+}
+
+for(i in 25:336){
+  Pass.Forecast.final[i] <- Pass.Forecast.final[length(Pass.Forecast.final) - 360 + i] + NN.Forecast.final$mean[i]
+}
+
+
+#Pass.Forecast.test <- ts(Pass.Forecast.test, start = 2022, frequency = 24)
+
+#test_ts <- ts(test[,2], start = 2022, frequency = 24)]
+
+nn_pred_final <- Pass.Forecast.final
+
+aug_final_mw_with_forecast_nn <- c(final$mw[(begin_aug_2022 - 1):nrow(final)], nn_pred_final)
+
+ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_final_mw_with_forecast_nn, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Neural Network Test Forecast for 10/21/22-11/3/22", color = "Data")
+
+wt_model_pred_final <- 0.5 * HW_mult_final$mean + 0.5 * nn_pred_final
+
+final_df <- data.frame(cbind(format(tseq_final_test_week), wt_model_pred_final))
+final_df <- final_df[169:336,]
+
+colnames(final_df) <- c("time", "mw")
+write_csv(final_df, "/Users/noahjohnson/Downloads/bluefall2hwteam17/Blue 17 TS2 Final Project Forecasted Values.csv")
+
+aug_final_mw_with_forecast_wt <- c(final$mw[(begin_aug_2022 - 1):nrow(final)], wt_model_pred_final)
+
+ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_final_mw_with_forecast_wt, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "Final Selected Model Test Forecast for 10/21/22-11/3/22", color = "Data")
+
+
+
