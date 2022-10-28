@@ -835,7 +835,6 @@ final_test <- final_test[,c(1, 6)]
 final_test$datetime_beginning_ept <- mdy_hm(final_test$datetime_beginning_ept, tz = Sys.timezone())
 final <- data.frame(rbind(train, validation, test, final_test))
 
-
 energy.final <- ts(final[,2], start = 2019, frequency = 24)
 
 tseq_2022_final_aug_test <- seq.POSIXt(from = as.POSIXct("2022-08-01 00:00:00", tz = "EST"), length.out = nrow(final) - begin_aug_2022 + 194, by = "hours")
@@ -844,8 +843,30 @@ tseq_final_test_week <- seq.POSIXt(from = as.POSIXct("2022-10-27 00:00:00", tz =
 dummy_df_aug_final <- data.frame(cbind(seq(1:length(tseq_2022_final_aug_test)), c(rep(FALSE, (length(tseq_2022_final_aug_test) -192)), rep(TRUE, 192))))
 colnames(dummy_df_aug_final) <- c("index", "forecast")
 
-HW_mult_final <- hw(energy.final, seasonal = "multiplicative", h = 192)
+#Chosen model
+arima1222_final <- Arima(energy.final, order = c(1,0,2), seasonal = c(2,1,2))
+arima1222_final_forecast <- forecast::forecast(arima1222_final, h = 192)
 
+#append forecasted values to original data, only going to graph from 8/1/2022
+aug_final_mw_with_forecast_arima <- c(final$mw[(begin_aug_2022 - 1):nrow(final)], arima1222_final_forecast$mean)
+
+#time plots with colored forecasts
+
+#subset from 8/1/2022
+ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_final_mw_with_forecast_arima, color = factor(forecast), group = 1)) + 
+  scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
+  scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
+  theme(plot.title = element_text(hjust = 0.5), legend.title = element_text(hjust = 0.5)) +
+  labs(x = "Time", y = "Energy (megawatts)", title = "ARIMA(1,0,2)(2,1,2)[24] Test Forecast for 10/27/22-11/3/22", color = "Data")
+
+final_df <- data.frame(cbind(format(tseq_final_test_week), arima1222_final_forecast$mean))
+final_df <- final_df[25:192,]
+
+colnames(final_df) <- c("time", "mw")
+write_csv(final_df, "/Users/noahjohnson/Downloads/bluefall2hwteam17/Blue 17 TS2 Final Project Forecasted Values.csv")
+
+
+#Second place model
 aug_final_mw_with_forecast_mult <- c(final$mw[(begin_aug_2022 - 1):nrow(final)], HW_mult_final$mean)
 
 ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_final_mw_with_forecast_mult, color = factor(forecast), group = 1)) + 
@@ -881,7 +902,7 @@ ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_fina
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
-  labs(x = "Time", y = "Energy (megawatts)", title = "Neural Network Test Forecast for 10/21/22-11/3/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "0.5 HW / 0.5 NN Test Forecast for 10/27/22-11/3/22", color = "Data")
 
 wt_model_pred_final <- 0.5 * HW_mult_final$mean + 0.5 * nn_pred_final
 
@@ -897,6 +918,6 @@ ggplot(data = dummy_df_aug_final, aes(x = tseq_2022_final_aug_test, y = aug_fina
   scale_x_datetime(date_labels = "%m/%d/%Y") + geom_line() + 
   scale_color_manual(values = c("#648fff", "#ffb000"), labels = c("Original", "Forecast")) + 
   theme(legend.title = element_text(hjust = 0.5), plot.title = element_text(hjust = 0.5)) +
-  labs(x = "Time", y = "Energy (megawatts)", title = "Final Selected Model Test Forecast for 10/21/22-11/3/22", color = "Data")
+  labs(x = "Time", y = "Energy (megawatts)", title = "Final Selected Model Test Forecast for 10/27/22-11/3/22", color = "Data")
 
 
